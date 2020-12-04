@@ -1,31 +1,219 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+
+    android:background="?attr/qmui_config_color_blue"
+    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".RegisterActivity">
+    <!--background的color改了-->
 
-    <EditText
-        android:id="@+id/username"
+    <com.qmuiteam.qmui.widget.QMUITopBar
+        android:id="@+id/topbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:hint="username" />
+        android:layout_height="?attr/qmui_topbar_height" />
 
-    <EditText
-        android:id="@+id/password"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:hint="password" />
+        android:layout_height="match_parent"
+        android:background="?attr/qmui_config_color_background">
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:id="@+id/registerBn"
-        android:text="注冊" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <!--注册标题文字-->
+            <TextView
+                android:id="@+id/textview_validateinfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/qmui_group_list_section_header_footer_padding_vertical"
+                android:paddingLeft="?attr/qmui_content_padding_horizontal"
+                android:paddingRight="?attr/qmui_content_padding_horizontal"
+                android:paddingTop="@dimen/qmui_group_list_section_header_footer_padding_vertical"
+                android:text="注册账号"
+                android:textColor="?attr/qmui_config_color_gray_3"
+                android:textSize="@dimen/qmui_group_list_section_header_footer_text_size" />
+            <!--边框分割细线-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/qmui_s_list_item_bg_with_border_bottom" />
+            <!--账户、手机号、密码输入框-->
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/qmui_config_color_white"
+                android:columnCount="2"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+                <!--账号-->
+                <!--padding：指定控件与内部控件之间的距离 left right改过-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/qmui_list_item_height"
+                    android:layout_gravity="fill_horizontal"
+                    android:background="@drawable/qmui_s_list_item_bg_with_border_bottom"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="?attr/qmui_content_padding_horizontal"
+                    android:paddingRight="?attr/qmui_content_padding_horizontal"
+                    android:text="账号"
+                    android:textColor="?attr/qmui_config_color_gray_1"
+                    android:textSize="?attr/qmui_common_list_item_title_h_text_size" />
+                <!--账号输入框-->
+                <EditText
+                    android:id="@+id/et_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="fill"
+                    android:background="@drawable/qmui_divider_bottom_bitmap"
+                    android:hint="请输入2到20位字符"
+                    android:maxLength="20"
+                    android:textColor="?attr/qmui_config_color_gray_5"
+                    android:textSize="?attr/qmui_common_list_item_detail_h_text_size" />
+                <!--密码-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/qmui_list_item_height"
+                    android:layout_gravity="fill_horizontal"
+                    android:background="@drawable/qmui_s_list_item_bg_with_border_bottom"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="?attr/qmui_content_padding_horizontal"
+                    android:paddingRight="?attr/qmui_content_padding_horizontal"
+                    android:text="密码"
+                    android:textColor="?attr/qmui_config_color_gray_1"
+                    android:textSize="?attr/qmui_common_list_item_title_h_text_size" />
+                <!--密码输入框-->
+                <EditText
+                    android:id="@+id/et_password"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="fill"
+                    android:background="@drawable/qmui_divider_bottom_bitmap"
+                    android:hint="请输入6到20位密码"
+                    android:maxLength="20"
+                    android:inputType="textPassword"
+                    android:textColor="?attr/qmui_config_color_gray_5"
+                    android:textSize="?attr/qmui_common_list_item_detail_h_text_size" />
+                <!--照片-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/qmui_list_item_height"
+                    android:background="@drawable/qmui_s_list_item_bg_with_border_bottom"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="?attr/qmui_content_padding_horizontal"
+                    android:paddingRight="?attr/qmui_content_padding_horizontal"
+                    android:text="照片"
+                    android:textColor="?attr/qmui_config_color_gray_1"
+                    android:textSize="?attr/qmui_common_list_item_title_h_text_size" />
+                <!--照片输入框-->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="fill"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <!--照片输入框-->
+                    <!--<EditText
+                        android:id="@+id/edittext_verifycode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_weight="2"
+                        android:background="@drawable/qmui_divider_bottom_bitmap"
+                        android:hint="请拍摄或选取照片"
 
+                        android:textColor="?attr/qmui_config_color_gray_5"
+                        android:textSize="?attr/qmui_common_list_item_detail_h_text_size" />
+                    -->
+
+                    <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+
+                        android:id="@+id/btn_takephoto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="拍照"
+                        android:textSize="?attr/qmui_common_list_item_title_h_text_size"
+                        app:qmui_radius="4dp" />
+                    <!--显示注册拍摄的照片 我把它先显示在照片输入框下面-->
+                    <!--后续想把这个输入框改成一个方形存放照片 背景有文字提示-->
+
+                    <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+
+                        android:id="@+id/btn_choosephoto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:clickable="true"
+                        android:gravity="center"
+                        android:padding="5dp"
+                        android:text="相册"
+                        android:textSize="?attr/qmui_common_list_item_title_h_text_size"
+                        app:qmui_radius="4dp" />
+
+                </LinearLayout>
+
+            </GridLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                <ImageView
+                    android:id="@+id/iv_picture"
+                    android:layout_width="300dp"
+                    android:layout_height="300dp"
+                    android:src="@mipmap/ic_launcher"
+                    android:scaleType="centerInside"
+                    android:layout_gravity="center_horizontal"/>
+
+            </LinearLayout>
+            <!--注册按钮位置-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/qmui_config_color_white"
+                android:orientation="horizontal"
+                android:padding="?attr/qmui_content_padding_horizontal">
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    />
+
+                <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+                    android:id="@+id/btn_reg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="注册账号"
+                    android:textSize="?attr/qmui_common_list_item_title_h_text_size"
+                    app:qmui_isRadiusAdjustBounds="true"
+                    />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 </LinearLayout>

@@ -1,49 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="LoginActivity">
+    tools:context=".LoginActivity">
 
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout
+        android:id="@+id/input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/qmui_s_list_item_bg_with_border_bottom"
+                android:gravity="center_vertical"
+                android:paddingLeft="?attr/qmui_content_padding_horizontal"
+                android:paddingRight="?attr/qmui_content_padding_horizontal"
+                android:text="账号"
+                android:textColor="?attr/qmui_config_color_gray_1"
+                android:textSize="?attr/qmui_common_list_item_title_h_text_size" />
+            <EditText
+                android:id="@+id/et_username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="请输入账号"
+                android:textColor="?attr/qmui_config_color_gray_5"
+                android:textSize="?attr/qmui_common_list_item_detail_h_text_size"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/qmui_s_list_item_bg_with_border_bottom"
+                android:gravity="center_vertical"
+                android:paddingLeft="?attr/qmui_content_padding_horizontal"
+                android:paddingRight="?attr/qmui_content_padding_horizontal"
+                android:text="密码"
+                android:textColor="?attr/qmui_config_color_gray_1"
+                android:textSize="?attr/qmui_common_list_item_title_h_text_size" />
+            <EditText
+                android:id="@+id/et_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:hint="请输入密码"
+                android:textColor="?attr/qmui_config_color_gray_5"
+                android:textSize="?attr/qmui_common_list_item_detail_h_text_size"
+                />
+        </LinearLayout>
+        <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+            android:id="@+id/btn_login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="登录"
+            android:textSize="?attr/qmui_common_list_item_title_h_text_size"
+            app:qmui_isRadiusAdjustBounds="true" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+                android:id="@+id/btn_reg"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="注册"
+                android:textSize="?attr/qmui_common_list_item_title_h_text_size"
+                app:qmui_isRadiusAdjustBounds="true" />
+            <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+                android:id="@+id/btn_face_login"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:gravity="center"
+                android:padding="10dp"
+                android:text="人脸登录"
+                android:textSize="?attr/qmui_common_list_item_title_h_text_size"
+                app:qmui_isRadiusAdjustBounds="true" />
+            <!--imageView在下面——用于显示拍出的照片-->
+
+        </LinearLayout>
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:context=".LoginActivity">
-
-        <EditText
-            android:id="@+id/username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:hint="username" />
-
-        <EditText
-            android:id="@+id/password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="password" />
-
-        <Button
+        android:gravity="center"
+        android:layout_above="@id/input"
+        android:orientation="vertical">
+        <ImageView
+            android:id="@+id/iv_pic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:clickable="true"
-            android:id="@+id/loginBn"
-            android:text="登录" />
-
-        <TextView
-            android:id="@+id/registerText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
-            android:text="新用户注册"/>
+            android:src="@mipmap/ic_launcher"
+            android:layout_gravity="center_horizontal"/>
+        <!--想在这里加个文字提示-->
 
     </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="版权所有：@StudyWell_Group"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</RelativeLayout>
