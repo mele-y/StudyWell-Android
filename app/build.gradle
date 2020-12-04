@@ -28,4 +28,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
     implementation 'com.squareup.okio:okio:2.9.0'
+
+    // fastjson
+    implementation group: 'org.ligboy.retrofit2', name: 'converter-fastjson-android', version: '2.1.0'
 }
