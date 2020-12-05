@@ -89,7 +89,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 //startActivity(intent);
                 // 判断是否登录成功
 
-                switch (res.getStatus()) {
+                switch (res.getCode()) {
                     case 1:
                         // step.1 保存用户标识
                         // step.2 跳转到主界面

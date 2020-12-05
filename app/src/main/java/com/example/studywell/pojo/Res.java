@@ -7,16 +7,16 @@ import com.alibaba.fastjson.JSONObject;
 import java.util.List;
 
 public class Res {
-    private int status;
+    private int code;
     private String msg;
     private String data;
 
-    public int getStatus() {
-        return status;
+    public int getCode() {
+        return code;
     }
 
-    public void setStatus(int status) {
-        this.status = status;
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public String getMsg() {
@@ -38,9 +38,9 @@ public class Res {
     @Override
     public String toString() {
         return "Res{" +
-                "status=" + status +
+                "code=" + code +
                 ", msg='" + msg + '\'' +
-                ", data=" + data +
+                ", data='" + data + '\'' +
                 '}';
     }
 

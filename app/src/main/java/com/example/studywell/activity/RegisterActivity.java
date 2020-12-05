@@ -7,8 +7,11 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import android.Manifest;
+import android.annotation.TargetApi;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -16,7 +19,9 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +33,7 @@ import com.alibaba.fastjson.JSON;
 import com.example.studywell.pojo.Res;
 import com.example.studywell.utils.CallBackUtil;
 import com.example.studywell.utils.OkhttpUtil;
+import com.example.studywell.utils.RealFilePathUtil;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.qmuiteam.qmui.widget.QMUITopBar;
 
@@ -41,6 +47,12 @@ import java.util.HashMap;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -58,6 +70,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     @BindView(R.id.topbar)
     QMUITopBar mTopBar;
     final String TAG = getClass().getSimpleName();
+
+    private File outputImage;
+    //private Uri imageUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,51 +131,66 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     {
         String name = String.valueOf(et_username.getText());
         String pass = String.valueOf(et_password.getText());
-        Bitmap image = ((BitmapDrawable)iv_picture.getDrawable()).getBitmap();
-        File imagefile = saveBitmapFile(image);
-        String url = "http://121.196.150.196/register";//替换成自己的服务器地址
 
+        if (reg_imageUri == null)
+        {
+            Toast.makeText(this, "照片不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        //String url = "http://121.196.150.190/register";//替换成自己的服务器地址
+        File user_image;
+        // 照片放在缓存里
+        if (outputImage != null)
+        {
+            user_image = outputImage;
+        }
+        else
+        {
+            user_image = new File(RealFilePathUtil.getPath(this, reg_imageUri));
+        }
+
+        String url = "http://121.196.150.190/register";//替换成自己的服务器地址
         HashMap<String, String> paramsMap = new HashMap<>();
         paramsMap.put("username", name);
         paramsMap.put("password", pass);
-/*
-        OkhttpUtil.okHttpUploadFile(url, imagefile,"user_image", "image", paramsMap, new CallBackUtil.CallBackString() {
-            @Override
-            public Object onParseResponse(Call call, Res res) {
-                return null;
-            }
 
+        OkhttpUtil.okHttpUploadFile(url, user_image, "user_photo", OkhttpUtil.FILE_TYPE_IMAGE, paramsMap, new CallBackUtil.CallBackString() {
             @Override
             public void onFailure(Call call, Exception e) {
                 Toast.makeText(RegisterActivity.this, "不能正常连接到服务器", Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onResponse(Object response) {
-                Res res = JSON.parseObject((String) response, Res.class);
-                switch (res.getStatus()){
+            public void onProgress(float progress, long total) {
+
+            }
+
+            @Override
+            public void onResponse(String response) {
+                Log.i("==================================",response);
+                Res res = JSON.parseObject(response, Res.class);
+                switch (res.getCode()) {
                     case 0:
                         Toast.makeText(RegisterActivity.this, "用户已存在", Toast.LENGTH_SHORT).show();
                         break;
                     case 1:
                         Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent();
-                        intent.setClass(RegisterActivity.this,LoginActivity.class);
+                        intent.setClass(RegisterActivity.this, LoginActivity.class);
                         startActivity(intent);
                         break;
                     case 2:
+                        Toast.makeText(RegisterActivity.this, "注册失败", Toast.LENGTH_SHORT).show();
                         break;
                 }
-
             }
         });
-        */
 
     }
 
     private void takephoto(){
         Toast.makeText(RegisterActivity.this, "拍照", Toast.LENGTH_SHORT).show();
-        File outputImage = new File(getExternalCacheDir(), "output_image.jpg");
+        outputImage = new File(getExternalCacheDir(), "output_image.jpg");
         try//判断图片是否存在，存在则删除在创建，不存在则直接创建
         {
             if (outputImage.exists()) {
@@ -180,7 +210,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             reg_imageUri = Uri.fromFile(outputImage);
         }
         //使用隐示的Intent，调用摄像头，并把它存储
-        ActivityCompat.requestPermissions(RegisterActivity.this, new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+        //ActivityCompat.requestPermissions(RegisterActivity.this, new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
         Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
         intent.putExtra(MediaStore.EXTRA_OUTPUT, reg_imageUri);
         startActivityForResult(intent, REG_TAKE_PHOTO);
@@ -188,23 +218,24 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void chosephoto(){
+        outputImage = null;
         Toast.makeText(RegisterActivity.this, "选择照片", Toast.LENGTH_SHORT).show();
-        if(ContextCompat.checkSelfPermission(RegisterActivity.this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(RegisterActivity.this,new String[]{
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-            },1);
+        if (ContextCompat.checkSelfPermission(RegisterActivity.this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.
+                PERMISSION_GRANTED) {
+            Log.d("permission", "permission");
+            ActivityCompat.requestPermissions(RegisterActivity.this, new
+                    String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        } else {
+            Log.d("album", "openAlbum");
+            openAlbum();
         }
-        // 在新的Intent里面打开，并且传递CHOOSE_PHOTO选项
-        Intent intent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        //Intent intent = new Intent();
-        //intent.setClass(RegisterActivity.this, AlbumActivity.class);
-        //也可以这样写intent.setClass(MainActivity.this, OtherActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putInt("id", CHOOSE_PHOTO);
-        intent.putExtras(bundle);
-        RegisterActivity.this.startActivity(intent);
+    }
+
+    private void openAlbum() {
+        Intent intent = new Intent("android.intent.action.GET_CONTENT");
+        intent.setType("image/*");
+        startActivityForResult(intent, CHOOSE_PHOTO); // 打开相册
     }
 
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -220,12 +251,101 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                     }
                 }
                 break;
+
+            case CHOOSE_PHOTO: {
+                if (resultCode == RESULT_OK) {
+                    reg_imageUri = data.getData();
+                    // 判断手机系统版本号
+                    if (Build.VERSION.SDK_INT >= 19) {
+                        // 4.4及以上系统使用这个方法处理图片
+                        handleImageOnKitKat(data);
+                    } else {
+                        // 4.4以下系统使用这个方法处理图片
+                        handleImageBeforeKitKat(data);
+                    }
+                }
+                break;
+            }
             default:
                 break;
         }
     }
 
+    @TargetApi(19)
+    private void handleImageOnKitKat(Intent data) {
+        String imagePath = null;
+        Uri uri = data.getData();
+        if (DocumentsContract.isDocumentUri(this, uri)) {
+            // 如果是document类型的Uri，则通过document id处理
+            String docId = DocumentsContract.getDocumentId(uri);
+            if ("com.android.providers.media.documents".equals(uri.getAuthority())) {
+                String id = docId.split(":")[1]; // 解析出数字格式的id
+                String selection = MediaStore.Images.Media._ID + "=" + id;
+                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);
+            } else if ("com.android.providers.downloads.documents".equals(uri.
+                    getAuthority())) {
+                Uri contentUri = ContentUris.withAppendedId(Uri.parse("content://downloads/public_downloads"), Long.valueOf(docId));
+                imagePath = getImagePath(contentUri, null);
+            }
+        } else if ("content".equalsIgnoreCase(uri.getScheme())) {
+            // 如果是content类型的Uri，则使用普通方式处理
+            imagePath = getImagePath(uri, null);
+        } else if ("file".equalsIgnoreCase(uri.getScheme())) {
+            // 如果是file类型的Uri，直接获取图片路径即可
+            imagePath = uri.getPath();
+        }
+        displayImage(imagePath); // 根据图片路径显示图片
+    }
 
+    private void handleImageBeforeKitKat(Intent data) {
+        Uri uri = data.getData();
+
+        String imagePath = getImagePath(uri, null);
+        displayImage(imagePath);
+    }
+
+    private String getImagePath(Uri uri, String selection) {
+        String path = null;
+        // 通过Uri和selection来获取真实的图片路径
+        Cursor cursor = getContentResolver().query(uri, null, selection, null, null);
+        if (cursor != null) {
+            if (cursor.moveToFirst()) {
+                path = cursor.getString(cursor.getColumnIndex(MediaStore.
+                        Images.Media.DATA));
+            }
+            cursor.close();
+        }
+        return path;
+    }
+
+    private void displayImage(String imagePath) {
+        if (imagePath != null) {
+            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);
+            iv_picture.setImageBitmap(bitmap);
+        } else {
+            Toast.makeText(this, "failed to get image", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                                           int[] grantResults) {
+        switch (requestCode) {
+            case 1:
+
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.
+                        PERMISSION_GRANTED) {
+                    openAlbum();
+                } else {
+                    Toast.makeText(this, "You denied the permission",
+                            Toast.LENGTH_SHORT).show();
+                }
+                break;
+            default:
+        }
+    }
+
+/*
     public File saveBitmapFile(Bitmap bitmap) {
         File file = new File(Environment.getExternalStorageDirectory() + "/temp.jpg");//将要保存图片的路径
         try {
@@ -238,5 +358,5 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         }
         return file;
     }
-
+*/
 }
