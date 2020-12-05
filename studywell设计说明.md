@@ -91,11 +91,11 @@ book表
 
   格式统一为json
 
-  | 参数   | 说明                                            |
-  | ------ | ----------------------------------------------- |
-  | status | 1说明登录成功，2说明用户名不存在，3说明密码错误 |
-  | msg    |                                                 |
-  | data   | 第一页的书籍信息                                |
+  | 参数 | 类型   | 说明                                            |
+  | ---- | ------ | ----------------------------------------------- |
+  | code | int    | 1说明登录成功，2说明用户名不存在，3说明密码错误 |
+  | msg  | string |                                                 |
+  | data | list   | 第一页的书籍信息                                |
 
   
 
@@ -103,7 +103,7 @@ book表
 
   ```
   {
-     "status":"1",
+     "code":1,
      "msg":"login success",
      "data":[{"book_id":"1",
        "book_name":"1984",
@@ -119,12 +119,12 @@ book表
      ]
   }
   {
-     "status":"2",
+     "code":2,
      "msg":"user does not exist",
      "data":[]
   }
   {
-  "status":"3",
+  "status":3,
   "msg":"password error",
   "data":[]
   }
@@ -135,30 +135,32 @@ book表
 - 请求方式 POST
 - 请求header
 - 请求body参数
- |参数名|类型|说明|
- |username|string|用户名|
- |password|string|密码|
- |user_image|file|用户照片|
+|参数名|类型|说明|是否必填|
+| -------- | ------ | ---- | -------- |
+|username|string|用户名|Y|
+|password|string|密码|Y|
+|user_photo|file|用户照片|Y|
 - 返回header参数
 - 返回body参数
-|参数|说明|
-|code|1注册成功，0用户已存在,2注册失败|
-|user_id|用户id|
-|msg||
+|参数|类型|说明|
+|----|----|----|
+|code|int|1注册成功，0用户已存在,2注册失败|
+|user_id|int|用户id|
+|msg|string||
 - 示例
 ```
 {
-  "code":"1",
-  "user_id":"119",
+  "code":1,
+  "user_id":119,
   "msg":"register fail",
 }
 {
-  "code":"0",
+  "code":0,
   "user_id":"",
   "msg":"user already exists"
 }
 {
-"code":"2",
+"code":2,
  "user_id":""
  "msg":"register failed"
 }
@@ -172,13 +174,23 @@ book表
 |username|string||不可空|
 |user_face_image|file||不可空|
 - 返回参数
-|参数名|说明|
-|code|0表示不存在，1表示存在但与照片不匹配,2表示存在且匹配|
-|||
 - 示例
 ### 6.4 分页显示接口
 ### 6.5 查询接口
 ### 6.6 下载接口
+- 请求地址:http://121.196.150.196/download_book
+
+- 请求方式:GET
+
+- 请求参数
+
+| 参数名  | 类型 | 说明 | 是否必填 |
+| ------- | ---- | ---- | -------- |
+| book_id | int  |      | Y        |
+
+  
+
+
 ### 6.7 上传接口
 - 请求地址:http://121.196.150.196/upload_book
 - 请求方式：POST
@@ -193,6 +205,6 @@ book表
 |book_file|file||Y|
 - 返回body参数
 |参数名|类型|说明|
-|-----|-----|-----|
+|---|---|---|
 |msg|string||
 |code|int|0说明上传失败，1表示上传成功|
