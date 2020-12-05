@@ -11,11 +11,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -23,25 +24,23 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.example.studywell.activity.R;
+import com.alibaba.fastjson.JSON;
+import com.example.studywell.pojo.Res;
 import com.example.studywell.utils.CallBackUtil;
 import com.example.studywell.utils.OkhttpUtil;
 import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 import com.qmuiteam.qmui.widget.QMUITopBar;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class RegisterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -74,6 +73,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         setContentView(root);
 
         iv_picture = findViewById(R.id.iv_picture);
+        et_username = findViewById(R.id.et_username);
+        et_password = findViewById(R.id.et_password);
+
         btn_takephoto = findViewById(R.id.btn_takephoto);
         btn_takephoto.setOnClickListener(this);
         btn_choosephoto = findViewById(R.id.btn_choosephoto);
@@ -112,19 +114,19 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     /* 注册 */
     private void register()
     {
-        et_username = findViewById(R.id.et_username);
-        et_password = findViewById(R.id.et_password);
         String name = String.valueOf(et_username.getText());
         String pass = String.valueOf(et_password.getText());
-        String url = "https://www.baidu.com/";//替换成自己的服务器地址
+        Bitmap image = ((BitmapDrawable)iv_picture.getDrawable()).getBitmap();
+        File imagefile = saveBitmapFile(image);
+        String url = "http://121.196.150.196/register";//替换成自己的服务器地址
 
         HashMap<String, String> paramsMap = new HashMap<>();
         paramsMap.put("username", name);
         paramsMap.put("password", pass);
-
-        OkhttpUtil.okHttpPost(url, paramsMap, new CallBackUtil() {
+/*
+        OkhttpUtil.okHttpUploadFile(url, imagefile,"user_image", "image", paramsMap, new CallBackUtil.CallBackString() {
             @Override
-            public Object onParseResponse(Call call, Response response) {
+            public Object onParseResponse(Call call, Res res) {
                 return null;
             }
 
@@ -135,9 +137,25 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
 
             @Override
             public void onResponse(Object response) {
+                Res res = JSON.parseObject((String) response, Res.class);
+                switch (res.getStatus()){
+                    case 0:
+                        Toast.makeText(RegisterActivity.this, "用户已存在", Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1:
+                        Toast.makeText(RegisterActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent();
+                        intent.setClass(RegisterActivity.this,LoginActivity.class);
+                        startActivity(intent);
+                        break;
+                    case 2:
+                        break;
+                }
 
             }
         });
+        */
+
     }
 
     private void takephoto(){
@@ -205,6 +223,20 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             default:
                 break;
         }
+    }
+
+
+    public File saveBitmapFile(Bitmap bitmap) {
+        File file = new File(Environment.getExternalStorageDirectory() + "/temp.jpg");//将要保存图片的路径
+        try {
+            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            bos.flush();
+            bos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return file;
     }
 
 }

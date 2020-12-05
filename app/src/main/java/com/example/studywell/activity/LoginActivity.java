@@ -8,23 +8,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.example.studywell.activity.R;
-import com.example.studywell.pojo.Response;
+import com.example.studywell.pojo.Res;
 import com.example.studywell.utils.CallBackUtil;
 import com.example.studywell.utils.OkhttpUtil;
 
-import java.io.IOException;
 import java.util.HashMap;
 
 import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.FormBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -88,7 +81,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onResponse(String response) {
-                Response res = JSON.parseObject(response, Response.class);
+                Res res = JSON.parseObject(response, Res.class);
                 // 测试数据的保存
                 //saveInfo();
 
@@ -99,7 +92,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 switch (res.getStatus()) {
                     case 1:
                         // step.1 保存用户标识
-
                         // step.2 跳转到主界面
                         //Intent intent = new Intent("ACTION_HOME");
                         //startActivity(intent);

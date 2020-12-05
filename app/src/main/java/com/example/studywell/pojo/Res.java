@@ -6,7 +6,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import java.util.List;
 
-public class Response {
+public class Res {
     private int status;
     private String msg;
     private String data;
@@ -37,7 +37,7 @@ public class Response {
 
     @Override
     public String toString() {
-        return "Response{" +
+        return "Res{" +
                 "status=" + status +
                 ", msg='" + msg + '\'' +
                 ", data=" + data +
@@ -58,9 +58,9 @@ public class Response {
         data.put("publish_date", "George Orwel");
         data.put("upload_date", "George Orwel");
         object.put("data", data.toJSONString());
-        Response response = JSON.parseObject(object.toJSONString(), Response.class);
-        Book book = JSON.parseObject(response.getData(), Book.class);
-        System.out.println(response);
+        Res res = JSON.parseObject(object.toJSONString(), Res.class);
+        Book book = JSON.parseObject(res.getData(), Book.class);
+        System.out.println(res);
         System.out.println(book);
         // data是列表
         JSONObject object2 = new JSONObject();
@@ -70,9 +70,9 @@ public class Response {
         data2.add(book);
         data2.add(book);
         object2.put("data", data2.toJSONString());
-        Response response2 = JSON.parseObject(object2.toJSONString(), Response.class);
-        List<Book> books = JSON.parseArray(response2.getData(), Book.class);
-        System.out.println(response2);
+        Res res2 = JSON.parseObject(object2.toJSONString(), Res.class);
+        List<Book> books = JSON.parseArray(res2.getData(), Book.class);
+        System.out.println(res2);
         System.out.println(books);
     }
 }
