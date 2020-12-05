@@ -21,11 +21,14 @@ import okhttp3.Call;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button btn_login;
-    private Button btn_reg;
-    private EditText et_username;
-    private EditText et_password;
-    // 存储
+
+    /* 控件对象 */
+    private Button btn_login;       // 登录按钮
+    private Button btn_reg;         // 注册按钮
+    private EditText et_username;   // 用户名输入框
+    private EditText et_password;   // 密码输入框
+
+    /* 本地存储键值对 */
     private SharedPreferences mSpf;
 
 
@@ -34,10 +37,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+
+        // 初始化控件
         btn_login = findViewById(R.id.btn_login);
         btn_reg = findViewById(R.id.btn_reg);
+        et_username = findViewById(R.id.et_username);
+        et_password = findViewById(R.id.et_password);
 
-        // 注册点击监听器
+        // 绑定点击事件
         btn_login.setOnClickListener(this);
         btn_reg.setOnClickListener(this);
 
@@ -48,7 +55,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            // 发送登录请求
+            // 登录
             case R.id.btn_login:
                 login();
                 break;
@@ -61,18 +68,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void login() {
-        et_username = findViewById(R.id.et_username);
-        et_password = findViewById(R.id.et_password);
+
         String name = String.valueOf(et_username.getText());
         String pass = String.valueOf(et_password.getText());
 
-        Toast.makeText(LoginActivity.this, ""+name+pass, Toast.LENGTH_SHORT).show();
-
-        String url = "http://121.196.150.190/login";
+        // 请求url
+        String url = getString(R.string.baseUrl) + "/login";
+        // 参数列表
         HashMap<String, String> paramsMap = new HashMap<>();
         paramsMap.put("username", name);
         paramsMap.put("password", pass);
-        // 执行在UI线程（主线程）
+        // onFailure、onResponse执行在UI线程（主线程）
         OkhttpUtil.okHttpPost(url, paramsMap, new CallBackUtil.CallBackString() {
             @Override
             public void onFailure(Call call, Exception e) {
@@ -82,21 +88,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(String response) {
                 Res res = JSON.parseObject(response, Res.class);
-                // 测试数据的保存
-                //saveInfo();
-
-                //Intent intent = new Intent("ACTION_HOME");
-                //startActivity(intent);
                 // 判断是否登录成功
-
                 switch (res.getCode()) {
+                    // 登录成功
                     case 1:
                         // step.1 保存用户标识
+
                         // step.2 跳转到主界面
-                        //Intent intent = new Intent("ACTION_HOME");
-                        //startActivity(intent);
+                        // Intent intent = new Intent("ACTION_HOME");
+                        // startActivity(intent);
                         Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                         break;
+                    // 出现错误
                     default:
                         Toast.makeText(LoginActivity.this, "用户名或密码错误", Toast.LENGTH_SHORT).show();
                         break;

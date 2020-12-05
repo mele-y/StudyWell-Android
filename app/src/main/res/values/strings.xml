@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">StudyWellApp</string>
+    <string name="baseUrl">http://121.196.150.190/</string>
 </resources>
