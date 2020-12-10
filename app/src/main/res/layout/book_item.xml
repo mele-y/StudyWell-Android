@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="left"
-            android:src="@drawable/jianai"
+            android:src="@mipmap/jianai"
             />
         <LinearLayout
             android:layout_width="wrap_content"
@@ -174,7 +174,6 @@
                     android:gravity="center_vertical"
                     android:textColor="@color/btn_filled_blue_bg_normal" />
             </LinearLayout>
-
 
             <Button
                 android:id="@+id/download"
