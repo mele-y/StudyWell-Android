@@ -23,6 +23,12 @@ public class BookAdapter extends ArrayAdapter<Book> {
     class ViewHolder {
 //        ImageView bookImage;
         TextView bookName;
+        TextView book_auther;
+        TextView book_description;
+        TextView upload_date;
+        TextView book_publication;
+        TextView publish_date;
+
     }
 
     public BookAdapter(@NonNull Context context, int resource, @NonNull List<Book> objects) {
@@ -45,6 +51,12 @@ public class BookAdapter extends ArrayAdapter<Book> {
             viewHolder = new ViewHolder();
             // viewHolder.fruitImage = (ImageView) view.findViewById(R.id.fruit_image);
             viewHolder.bookName = (TextView) view.findViewById (R.id.book_name);
+            viewHolder.book_auther = (TextView) view.findViewById (R.id.book_auther);
+            viewHolder.book_description = (TextView) view.findViewById (R.id.book_description);
+            viewHolder.upload_date = (TextView) view.findViewById (R.id.upload_date);
+            viewHolder.book_publication = (TextView) view.findViewById (R.id.book_publication);
+            viewHolder.publish_date = (TextView) view.findViewById (R.id.publish_date);
+
             view.setTag(viewHolder); // 将ViewHolder存储在View中
         }
         else
@@ -56,6 +68,11 @@ public class BookAdapter extends ArrayAdapter<Book> {
         // TextView bookName = (TextView) view.findViewById(R.id.book_name);
         // bookImage.setImageResource();
         viewHolder.bookName.setText(book.getBook_name());
+        viewHolder.book_auther.setText(book.getAuthor());
+        viewHolder.book_description.setText(book.getBook_description());
+        viewHolder.upload_date.setText(book.getUpload_date());
+        viewHolder.book_publication.setText(book.getPublication());
+        viewHolder.publish_date.setText(book.getPublish_date());
         return view;
     }
 }

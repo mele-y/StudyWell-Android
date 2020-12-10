@@ -31,7 +31,6 @@ public class HomeActivity extends AppCompatActivity {
         mSpf = getSharedPreferences("user", MODE_PRIVATE);
         readInfo();
 
-
         // 传入测试数据
         initBooks();
         // 使用android内置的listItem控件
@@ -50,7 +49,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void initBooks() {
-        for (int i = 0; i < 50; ++i) {
+        for (int i = 0; i < 10; ++i) {
             Book book = new Book();
             book.setBook_name("简.爱");
             book.setAuthor("夏洛蒂·勃朗特");
@@ -68,5 +67,10 @@ public class HomeActivity extends AppCompatActivity {
         String username = mSpf.getString("username", "");
         String password = mSpf.getString("password", "");
         Toast.makeText(this, username + " " + password, Toast.LENGTH_SHORT).show();
+
+    }
+
+    private void getBooks(){
+
     }
 }
