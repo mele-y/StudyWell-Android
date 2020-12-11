@@ -74,7 +74,12 @@ android:layout_height="152dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <!-- Scrollable content -->
+       <ListView
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:id="@+id/bookListView">
 
+       </ListView>
 
         <com.getbase.floatingactionbutton.FloatingActionsMenu
             android:id="@+id/jump_button"
