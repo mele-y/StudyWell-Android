@@ -30,7 +30,8 @@ public class HomeActivity extends AppCompatActivity {
         // 测试数据的读取
         mSpf = getSharedPreferences("user", MODE_PRIVATE);
         readInfo();
-        /*
+
+
         // 传入测试数据
         initBooks();
         // 使用android内置的listItem控件
@@ -45,7 +46,7 @@ public class HomeActivity extends AppCompatActivity {
                 Book book = books.get(position);
                 Toast.makeText(HomeActivity.this, book.getId()+"", Toast.LENGTH_SHORT).show();
             }
-        });*/
+        });
     }
 
     private void initBooks() {
