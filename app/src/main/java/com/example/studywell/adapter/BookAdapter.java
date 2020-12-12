@@ -39,7 +39,6 @@ public class BookAdapter extends ArrayAdapter<Book> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        Log.d("......................", String.valueOf(position));
         // 获取当前位置的book对象
         Book book = getItem(position);
         // 防止重复加载布局，复用之前缓存的布局
