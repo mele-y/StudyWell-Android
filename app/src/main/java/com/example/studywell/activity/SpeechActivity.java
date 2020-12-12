@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -29,6 +30,9 @@ public class SpeechActivity extends AppCompatActivity implements EventListener {
     protected TextView txtResult;   // 识别结果
     protected Button startBtn;  // 开始识别  一直不说话会自动停止，需要再次打开
     protected Button stopBtn;   // 停止识别
+    protected Button voiceBn;
+
+
     /* 调试 */
     final String TAG = getClass().getSimpleName();
 
@@ -55,6 +59,27 @@ public class SpeechActivity extends AppCompatActivity implements EventListener {
         txtResult = findViewById(R.id.tv_txt);
         startBtn = findViewById(R.id.btn_start);
         stopBtn = findViewById(R.id.btn_stop);
+        voiceBn = findViewById(R.id.btn_voice);
+
+        voiceBn.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View arg0, MotionEvent event) {
+                // TODO Auto-generated method stub
+                int action = event.getAction();
+                // 按下
+                if (action == MotionEvent.ACTION_DOWN) {
+                    asr.send(SpeechConstant.ASR_START, null, null, 0, 0);
+
+                }
+                // 松开
+                else if (action == MotionEvent.ACTION_UP) {
+                    asr.send(SpeechConstant.ASR_STOP, null, null, 0, 0);
+                }
+                return false;
+
+            }
+        });
 
         startBtn.setOnClickListener(new View.OnClickListener() {//开始
             @Override
