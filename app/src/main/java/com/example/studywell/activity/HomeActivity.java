@@ -34,6 +34,10 @@ public class HomeActivity extends AppCompatActivity {
     // 存储
     private SharedPreferences mSpf;
 
+    private BookAdapter bookAdapter;
+
+    public static HomeActivity homeActivity;
+
     /* 调试 */
     final String TAG = getClass().getSimpleName();
 
@@ -41,12 +45,29 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        // 方便其它类显示Toast
+        homeActivity = this;
+
         // 测试数据的读取
         mSpf = getSharedPreferences("user", MODE_PRIVATE);
         readInfo();
 
+        // 使用android内置的listItem控件
+        bookAdapter = new BookAdapter(HomeActivity.this,
+                R.layout.book_card, books);
+        listView = findViewById(R.id.bookListView);
+        listView.setAdapter(bookAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Book book = books.get(position);
+                Toast.makeText(HomeActivity.this, book.getBook_id()+"", Toast.LENGTH_SHORT).show();
+            }
+        });
 
-        // 传入测试数据
+        // 获取书籍列表并将其与listView绑定
         initBooks();
 
     }
@@ -70,20 +91,12 @@ public class HomeActivity extends AppCompatActivity {
                     case 1:
                         //
                         BookList list = JSON.parseObject(res.getData(), BookList.class);
-                        books = list.getData_book();
-                        // 使用android内置的listItem控件
-                        BookAdapter bookAdapter = new BookAdapter(HomeActivity.this,
-                                R.layout.book_card, books);
-                        listView = findViewById(R.id.bookListView);
-                        listView.setAdapter(bookAdapter);
-                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> parent, View view,
-                                                    int position, long id) {
-                                Book book = books.get(position);
-                                Toast.makeText(HomeActivity.this, book.getBook_id()+"", Toast.LENGTH_SHORT).show();
-                            }
-                        });
+                        books.addAll(list.getData_book());
+                        // 更新视图
+//                        bookAdapter = new BookAdapter(HomeActivity.this,
+//                                R.layout.book_card, books);
+//                        listView.setAdapter(bookAdapter);
+                        bookAdapter.notifyDataSetChanged();
                         Log.d(TAG, list.toString());
                         break;
                     // 出现错误

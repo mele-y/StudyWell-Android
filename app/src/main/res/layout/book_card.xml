@@ -84,7 +84,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
-                android:text="download" />
+                android:id="@+id/downloadBn"
+                android:text="下载" />
 
             <ImageView
                 android:layout_width="wrap_content"
