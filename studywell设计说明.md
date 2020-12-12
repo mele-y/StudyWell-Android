@@ -170,6 +170,7 @@ book表
   | description  | string |      | N        |
   | book_file    | file   |      | Y        |
   | publish_date | string |      | N        |
+  | book_cover   | file   |      | N        |
 
 - 返回body参数
 
