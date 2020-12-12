@@ -5,7 +5,7 @@ android {
     buildToolsVersion "30.0.2"
     defaultConfig {
         applicationId "com.example.studywell"
-        minSdkVersion 16
+        minSdkVersion 21
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -26,6 +26,7 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.android.material:material:1.2.1'
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
@@ -34,13 +35,22 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
     implementation 'com.squareup.okio:okio:2.9.0'
-
     implementation 'com.qmuiteam:qmui:1.1.2'
     implementation 'com.jakewharton:butterknife:10.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+    //主页viewpage依赖
+    implementation 'com.github.florent37:materialviewpager:1.2.3'
+    implementation 'com.flaviofaria:kenburnsview:1.0.7'
+    implementation 'com.jpardogo.materialtabstrip:library:1.1.0'
+    implementation 'com.github.bumptech.glide:glide:4.0.0'
 
     // fastjson
     implementation group: 'org.ligboy.retrofit2', name: 'converter-fastjson-android', version: '2.1.0'
 
     implementation project(path: ':core')
+    implementation 'androidx.mediarouter:mediarouter:1.2.0'
+    //搜索框floating search view 依赖
+    implementation 'com.github.arimorty:floatingsearchview:2.1.1'
+    //折叠floating button依赖
+    implementation 'com.getbase:floatingactionbutton:1.10.1'
 }

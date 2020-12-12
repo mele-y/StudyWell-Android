@@ -67,6 +67,6 @@ public class HomeActivity extends AppCompatActivity {
     {
         String username = mSpf.getString("username", "");
         String password = mSpf.getString("password", "");
-        Toast.makeText(this, username + " " + password, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, username + " " + password, Toast.LENGTH_SHORT).show();
     }
 }

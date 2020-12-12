@@ -1,11 +1,11 @@
 package com.example.studywell.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,6 +23,12 @@ public class BookAdapter extends ArrayAdapter<Book> {
     class ViewHolder {
 //        ImageView bookImage;
         TextView bookName;
+        TextView book_author;
+        TextView book_description;
+        TextView upload_date;
+        TextView book_publication;
+        TextView publish_date;
+
     }
 
     public BookAdapter(@NonNull Context context, int resource, @NonNull List<Book> objects) {
@@ -33,6 +39,7 @@ public class BookAdapter extends ArrayAdapter<Book> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        Log.d("......................", String.valueOf(position));
         // 获取当前位置的book对象
         Book book = getItem(position);
         // 防止重复加载布局，复用之前缓存的布局
@@ -44,7 +51,13 @@ public class BookAdapter extends ArrayAdapter<Book> {
                     false);
             viewHolder = new ViewHolder();
             // viewHolder.fruitImage = (ImageView) view.findViewById(R.id.fruit_image);
-            viewHolder.bookName = (TextView) view.findViewById (R.id.book_name);
+            viewHolder.bookName = view.findViewById (R.id.book_name);
+            viewHolder.book_author = view.findViewById (R.id.book_auther);
+            viewHolder.book_description = view.findViewById (R.id.book_description);
+            viewHolder.upload_date = view.findViewById (R.id.upload_date);
+            viewHolder.book_publication = view.findViewById (R.id.book_publication);
+            viewHolder.publish_date = view.findViewById (R.id.publish_date);
+
             view.setTag(viewHolder); // 将ViewHolder存储在View中
         }
         else
@@ -56,6 +69,11 @@ public class BookAdapter extends ArrayAdapter<Book> {
         // TextView bookName = (TextView) view.findViewById(R.id.book_name);
         // bookImage.setImageResource();
         viewHolder.bookName.setText(book.getBook_name());
+        viewHolder.book_author.setText(book.getAuthor());
+        viewHolder.book_description.setText(book.getBook_description());
+        viewHolder.upload_date.setText(book.getUpload_date());
+        viewHolder.book_publication.setText(book.getPublication());
+        viewHolder.publish_date.setText(book.getPublish_date());
         return view;
     }
 }

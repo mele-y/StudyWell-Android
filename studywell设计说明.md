@@ -9,12 +9,12 @@
 ## 3 数据库设计
 user表
 
-| 字段     | 类型    | 样例                          | 说明                     |
-| -------- | ------- | ----------------------------- | ------------------------ |
-| user_id  | integer | 1                             | 用户标示符，主键，不可空 |
-| username | text    | mele                          | 不可空                   |
-| password | text    | showmethemoney                | 不可空                   |
-| image    | text    | /www/wwwroot/image/1_mele.jpg | 用于人脸比对的照片，     |
+| 字段           | 类型    | 样例                               | 说明                     |
+| -------------- | ------- | ---------------------------------- | ------------------------ |
+| user_id        | integer | 1                                  | 用户标示符，主键，不可空 |
+| username       | text    | mele                               | 不可空                   |
+| password       | text    | showmethemoney                     | 不可空                   |
+| photo_location | text    | /www/wwwroot/user_photo/1_mele.jpg | 用于人脸比对的照片，     |
 
 book表
 
@@ -76,26 +76,26 @@ book表
 ## 6 接口设计
 ### 6.1 登录接口
 
-- 请求地址：http://121.196.150.190/login/
+- 请求地址：http://120.196.150.190/login/
 
 - 请求方式：post
 
-- 请求参数
+- 请求body参数
 
   | 参数     | 类型   | 说明 | 是否必填 |
   | -------- | ------ | ---- | -------- |
   | usesname | string |      | Y        |
   | password | string |      | Y        |
 
-- 返回参数说明
+- 返回body参数说明
 
   格式统一为json
 
-  | 参数 | 类型   | 说明                                            |
-  | ---- | ------ | ----------------------------------------------- |
-  | code | int    | 1说明登录成功，2说明用户名不存在，3说明密码错误 |
-  | msg  | string |                                                 |
-  | data | list   | 第一页的书籍信息                                |
+  | 参数   | 说明                                            |
+  | ------ | ----------------------------------------------- |
+  | status | 1说明登录成功，2说明用户名不存在，3说明密码错误 |
+  | msg    |                                                 |
+  | data   | 第一页的书籍信息                                |
 
   
 
@@ -103,7 +103,7 @@ book表
 
   ```
   {
-     "code":1,
+     "status":"1",
      "msg":"login success",
      "data":[{"book_id":"1",
        "book_name":"1984",
@@ -119,92 +119,63 @@ book表
      ]
   }
   {
-     "code":2,
+     "status":"2",
      "msg":"user does not exist",
      "data":[]
   }
   {
-  "status":3,
+  "status":"3",
   "msg":"password error",
   "data":[]
   }
   ```
 
 ### 6.2 注册接口
-- 请求地址 http://121.196.150.196/register
+
+- 请求地址 http://120.196.150.190/register
+
 - 请求方式 POST
-- 请求header
+
 - 请求body参数
-|参数名|类型|说明|是否必填|
-| -------- | ------ | ---- | -------- |
-|username|string|用户名|Y|
-|password|string|密码|Y|
-|user_photo|file|用户照片|Y|
-- 返回header参数
+
+  | 参数名     | 类型   | 说明 | 是否必填 |
+  | ---------- | ------ | ---- | -------- |
+  | username   | string |      | Y        |
+  | password   | string |      | Y        |
+  | user_photo | file   |      | Y        |
 - 返回body参数
-|参数|类型|说明|
-|----|----|----|
-|code|int|1注册成功，0用户已存在,2注册失败|
-|user_id|int|用户id|
-|msg|string||
-- 示例
-```
-{
-  "code":1,
-  "user_id":119,
-  "msg":"register fail",
-}
-{
-  "code":0,
-  "user_id":"",
-  "msg":"user already exists"
-}
-{
-"code":2,
- "user_id":""
- "msg":"register failed"
-}
-```
+    |参数|说明|
+    | --- | --- |
+    | code|0表示username已存在,1表示注册成功，2表示注册失败  |
+    |msg||
+
+
 ### 6.3 人脸登录接口
-- 请求地址 http://121.196.150.196/facelogin
-- 请求方式 POST
-- 请求body参数
-|参数名|类型|说明|是否可空|
-|---|---|---|
-|username|string||不可空|
-|user_face_image|file||不可空|
-- 返回参数
-- 示例
+
 ### 6.4 分页显示接口
 ### 6.5 查询接口
 ### 6.6 下载接口
-- 请求地址:http://121.196.150.196/download_book
+### 6.7 上传接口
+- 请求地址:http://120.196.150.190/upload_book
 
-- 请求方式:GET
+- 请求方式: POST
 
-- 请求参数
+- 请求body参数
 
-| 参数名  | 类型 | 说明 | 是否必填 |
-| ------- | ---- | ---- | -------- |
-| book_id | int  |      | Y        |
+  | 参数名       | 类型   | 说明 | 是否必填 |
+  | ------------ | ------ | ---- | -------- |
+  | book_name    | string |      | Y        |
+  | author       | string |      | N        |
+  | publication  | string |      | N        |
+  | description  | string |      | N        |
+  | book_file    | file   |      | Y        |
+  | publish_date | string |      | N        |
+
+- 返回body参数
+
+  | 参数名 | 类型   | 说明                         |
+  | ------ | ------ | ---------------------------- |
+  | code   | int    | 1表示上传成功，0表示上传失败 |
+  | msg    | string |                              |
 
   
-
-
-### 6.7 上传接口
-- 请求地址:http://121.196.150.196/upload_book
-- 请求方式：POST
-- 请求body参数
-|参数名|类型|说明|是否必填|
-| -------- | ------ | ---- | -------- |
-|book_name|string||Y|
-|author|string||N|
-|publication|string||N|
-|description|string||N|
-|publish_date|string||N|
-|book_file|file||Y|
-- 返回body参数
-|参数名|类型|说明|
-|---|---|---|
-|msg|string||
-|code|int|0说明上传失败，1表示上传成功|
