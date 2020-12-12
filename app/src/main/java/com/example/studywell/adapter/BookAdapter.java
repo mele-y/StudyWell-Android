@@ -1,11 +1,11 @@
 package com.example.studywell.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,12 +23,8 @@ public class BookAdapter extends ArrayAdapter<Book> {
     class ViewHolder {
 //        ImageView bookImage;
         TextView bookName;
-        TextView book_auther;
-        TextView book_description;
-        TextView upload_date;
-        TextView book_publication;
-        TextView publish_date;
-
+        TextView uploadTime;
+        TextView bookDescription;
     }
 
     public BookAdapter(@NonNull Context context, int resource, @NonNull List<Book> objects) {
@@ -50,12 +46,9 @@ public class BookAdapter extends ArrayAdapter<Book> {
                     false);
             viewHolder = new ViewHolder();
             // viewHolder.fruitImage = (ImageView) view.findViewById(R.id.fruit_image);
-            viewHolder.bookName = (TextView) view.findViewById (R.id.book_name);
-            viewHolder.book_auther = (TextView) view.findViewById (R.id.book_auther);
-            viewHolder.book_description = (TextView) view.findViewById (R.id.book_description);
-            viewHolder.upload_date = (TextView) view.findViewById (R.id.upload_date);
-            viewHolder.book_publication = (TextView) view.findViewById (R.id.book_publication);
-            viewHolder.publish_date = (TextView) view.findViewById (R.id.publish_date);
+            viewHolder.bookName = view.findViewById (R.id.book_name);
+           viewHolder.bookDescription = view.findViewById(R.id.book_description);
+           viewHolder.uploadTime = view.findViewById(R.id.upload_time);
 
             view.setTag(viewHolder); // 将ViewHolder存储在View中
         }
@@ -68,11 +61,8 @@ public class BookAdapter extends ArrayAdapter<Book> {
         // TextView bookName = (TextView) view.findViewById(R.id.book_name);
         // bookImage.setImageResource();
         viewHolder.bookName.setText(book.getBook_name());
-        viewHolder.book_auther.setText(book.getAuthor());
-        viewHolder.book_description.setText(book.getBook_description());
-        viewHolder.upload_date.setText(book.getUpload_date());
-        viewHolder.book_publication.setText(book.getPublication());
-        viewHolder.publish_date.setText(book.getPublish_date());
+        viewHolder.bookDescription.setText(book.getBook_description());
+        viewHolder.uploadTime.setText(book.getUpload_date());
         return view;
     }
 }

@@ -2,26 +2,26 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 30
-buildToolsVersion "30.0.2"
-defaultConfig {
-    applicationId "com.example.studywell"
-    minSdkVersion 21
-    targetSdkVersion 30
-    versionCode 1
-    versionName "1.0"
-    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-}
-buildTypes {
-    release {
-        minifyEnabled false
-        proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    buildToolsVersion "30.0.2"
+    defaultConfig {
+        applicationId "com.example.studywell"
+        minSdkVersion 21
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
-}
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
 
-compileOptions {
-    sourceCompatibility JavaVersion.VERSION_1_8
-    targetCompatibility JavaVersion.VERSION_1_8
-}
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 
 }
 
@@ -46,6 +46,8 @@ dependencies {
 
     // fastjson
     implementation group: 'org.ligboy.retrofit2', name: 'converter-fastjson-android', version: '2.1.0'
+
+    implementation project(path: ':core')
     implementation 'androidx.mediarouter:mediarouter:1.2.0'
     //搜索框floating search view 依赖
     implementation 'com.github.arimorty:floatingsearchview:2.1.1'

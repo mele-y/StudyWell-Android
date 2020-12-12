@@ -155,6 +155,60 @@ book表
 
 ### 6.4 分页显示接口
 ### 6.5 查询接口
+- 请求地址 http://121.196.150.190/query
+
+- 请求方式 GET
+
+- 请求body参数
+
+| 参数名  | 类型   | 说明 | 是否必填 |
+| ------- | ----- | ---- | -------- |
+|  info   |string |      | N        |
+|  page   |  int  |      | Y        |
+
+- 返回参数说明
+
+  格式统一为json
+
+  | 参数   | 说明                                            |
+  | ------ | ----------------------------------------------- |
+  | code   | 1说明查询成功，0说明未查询到书籍                   |
+  | msg    | 1"query success" 2"cant find any books"          |
+  | page   | 当前页数                                         |
+  | pages  | 查询到的书籍有多少页                              |
+  | data   | 当前页数的书籍信息                                |
+
+  
+- 返回参数示例
+
+  ```
+  {
+     "code":1,
+     "msg":"query success",
+     "page":1,
+     "pages":1,
+     "data":[{"book_id":"1",
+       "book_name":"1984",
+       "author":"George Orwel",
+       "publication":"",
+       "book_description":"famous book",
+       "publish_date":"2010-04-15"
+       "upload_date":"2020-11-30 11:29"
+     },{
+     "book_id":"2",
+     ......
+     }
+     ]
+  }
+  {
+     "code":0,
+     "msg":"cant find any books",
+     "page":1,
+     "pages":0,
+     "data":[]
+  }
+  ```
+  
 ### 6.6 下载接口
 
 - 请求地址:http://120.196.150.190/download_book/

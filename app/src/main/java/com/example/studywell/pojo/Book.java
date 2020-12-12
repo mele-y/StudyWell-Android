@@ -8,13 +8,22 @@ public class Book {
     private String book_description;
     private String publish_date;
     private String upload_date;
+    private String book_location;
 
-    public int getId() {
+    public int getBook_id() {
         return book_id;
     }
 
-    public void setId(int book_id) {
+    public void setBook_id(int book_id) {
         this.book_id = book_id;
+    }
+
+    public String getBook_location() {
+        return book_location;
+    }
+
+    public void setBook_location(String book_location) {
+        this.book_location = book_location;
     }
 
     public String getBook_name() {
@@ -75,6 +84,8 @@ public class Book {
                 ", book_description='" + book_description + '\'' +
                 ", publish_date='" + publish_date + '\'' +
                 ", upload_date='" + upload_date + '\'' +
+                ", book_location='" + book_location + '\'' +
                 '}';
     }
 }
+

@@ -22,33 +22,32 @@
         android:supportsRtl="true"
         android:theme="@style/MaterialDesignTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".GlideTestActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-                <!--
-                  <action android:name="ACTION_HOME" />
-             <category android:name="android.intent.category.DEFAULT" />
-                -->
-            </intent-filter>
-        </activity>
+        <activity android:name=".SpeechActivity"></activity>
+
 
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/file_paths" />
 
         <activity android:name=".HomeActivity">
-
             <!-- 程序主界面匹配的action以及category -->
-
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+                <!--             <action android:name="ACTION_HOME" />
+                            <category android:name="android.intent.category.DEFAULT" />-->
+            </intent-filter>
         </activity> <!-- 启动界面 -->
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/QMUI.Compat"></activity>
+            android:theme="@style/QMUI.Compat">
+
+        </activity>
         <activity
             android:name=".RegisterActivity"
             android:theme="@style/QMUI.Compat" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.cameraalbumtest.fileprovider"
