@@ -5,7 +5,7 @@ android {
     buildToolsVersion "30.0.2"
     defaultConfig {
         applicationId "com.example.studywell"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
@@ -41,4 +41,6 @@ dependencies {
 
     // fastjson
     implementation group: 'org.ligboy.retrofit2', name: 'converter-fastjson-android', version: '2.1.0'
+
+    implementation project(path: ':core')
 }

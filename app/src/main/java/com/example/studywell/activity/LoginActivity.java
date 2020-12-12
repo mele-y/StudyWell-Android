@@ -95,8 +95,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         // step.1 保存用户标识
 
                         // step.2 跳转到主界面
-                        // Intent intent = new Intent("ACTION_HOME");
-                        // startActivity(intent);
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+//                        Intent intent = new Intent(LoginActivity.this, SpeechActivity.class);
+                        startActivity(intent);
                         Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
                         break;
                     // 出现错误
