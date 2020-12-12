@@ -70,39 +70,38 @@ android:layout_height="152dp"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
            android:id="@+id/bookListView">
-
        </ListView>
 
-        <com.getbase.floatingactionbutton.FloatingActionsMenu
-            android:id="@+id/jump_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            fab:fab_addButtonColorNormal="@color/qmui_config_color_white"
-            fab:fab_addButtonColorPressed="@color/qmui_btn_blue_bg"
-            fab:fab_addButtonPlusIconColor="@color/blue"
-            fab:fab_addButtonSize="normal">
 
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:id="@+id/next_page_button"
-                android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/qmui_config_color_white"
-                fab:fab_colorPressed="@color/pressed_color"
-                app:fab_icon="@mipmap/baseline_keyboard_arrow_right_black_24"
-                fab:fab_title="Label on the right"
-                fab:fab_size="mini"/>
-
-            <com.getbase.floatingactionbutton.FloatingActionButton
-                android:layout_width="wrap_content"
-                android:id="@+id/previous_page"
-                android:layout_height="wrap_content"
-                fab:fab_colorNormal="@color/qmui_config_color_white"
-                fab:fab_colorPressed="@color/pressed_color"
-                fab:fab_size="mini"
-                app:fab_icon="@mipmap/baseline_keyboard_arrow_left_black_24"
-                fab:fab_title="Another one on the right" />
-        </com.getbase.floatingactionbutton.FloatingActionsMenu>
     </androidx.core.widget.NestedScrollView>
+    <com.getbase.floatingactionbutton.FloatingActionsMenu
+        android:id="@+id/jump_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        fab:fab_addButtonColorNormal="@color/qmui_config_color_white"
+        fab:fab_addButtonColorPressed="@color/qmui_btn_blue_bg"
+        fab:fab_addButtonPlusIconColor="@color/blue"
+        fab:fab_addButtonSize="normal">
 
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:id="@+id/next_page_button"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/qmui_config_color_white"
+            fab:fab_colorPressed="@color/pressed_color"
+            app:fab_icon="@mipmap/baseline_keyboard_arrow_right_black_24"
+            fab:fab_title="Label on the right"
+            fab:fab_size="mini"/>
+
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:id="@+id/previous_page"
+            android:layout_height="wrap_content"
+            fab:fab_colorNormal="@color/qmui_config_color_white"
+            fab:fab_colorPressed="@color/pressed_color"
+            fab:fab_size="mini"
+            app:fab_icon="@mipmap/baseline_keyboard_arrow_left_black_24"
+            fab:fab_title="Another one on the right" />
+    </com.getbase.floatingactionbutton.FloatingActionsMenu>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
