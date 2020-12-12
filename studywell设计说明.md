@@ -9,25 +9,26 @@
 ## 3 数据库设计
 user表
 
-| 字段           | 类型    | 样例                               | 说明                     |
-| -------------- | ------- | ---------------------------------- | ------------------------ |
-| user_id        | integer | 1                                  | 用户标示符，主键，不可空 |
-| username       | text    | mele                               | 不可空                   |
-| password       | text    | showmethemoney                     | 不可空                   |
-| photo_location | text    | /www/wwwroot/user_photo/1_mele.jpg | 用于人脸比对的照片，     |
+| 字段           | 类型    | 样例                                           | 说明                     |
+| -------------- | ------- | ---------------------------------------------- | ------------------------ |
+| user_id        | integer | 1                                              | 用户标示符，主键，不可空 |
+| username       | text    | mele                                           | 不可空                   |
+| password       | text    | showmethemoney                                 | 不可空                   |
+| photo_location | text    | /www/wwwroot/test/static/user_photo/1_mele.jpg | 用于人脸比对的照片，     |
 
 book表
 
-| 字段             | 类型 | 样例                             | 说明                 |
-| ---------------- | ---- | -------------------------------- | -------------------- |
-| book_id          | int  | 12                               | 主键，不可空         |
-| book_name        | text | 白夜行                           | 不可空               |
-| author           | text | 东野圭吾                         | 可空                 |
-| publication      | text | 人民邮电出版社                   | 可空                 |
-| publish_date     | text | 2017-10-26                       | 可空                 |
-| book_description | text | 四大名著之一                     | 图书附加说明，可空   |
-| book_location    | text | /www/wwwroot/bookfile/白夜行.pdf | 图书存储位置，不可空 |
-| upload_date      | text | 2020-11-29 11:24                 | 上传时间，不可空     |
+| 字段             | 类型 | 样例                                                   | 说明                 |
+| ---------------- | ---- | ------------------------------------------------------ | -------------------- |
+| book_id          | int  | 12                                                     | 主键，不可空         |
+| book_name        | text | 白夜行                                                 | 不可空               |
+| author           | text | 东野圭吾                                               | 可空                 |
+| publication      | text | 人民邮电出版社                                         | 可空                 |
+| publish_date     | text | 2017-10-26                                             | 可空                 |
+| book_description | text | 四大名著之一                                           | 图书附加说明，可空   |
+| book_location    | text | /www/wwwroot/bookfile/白夜行.pdf                       | 图书存储位置，不可空 |
+| upload_date      | text | 2020-11-29 11:24                                       | 上传时间，不可空     |
+| book_cover_url   | text | http://121.196.150.190/static/book_cover/12_白夜行.jpg | 可空                 |
 
 ## 4 安卓程序activity说明
 
@@ -209,6 +210,19 @@ book表
   ```
   
 ### 6.6 下载接口
+
+- 请求地址:http://120.196.150.190/download_book/
+
+- 请求方式：GET
+
+- URL请求参数:
+
+  | 参数名  | 类型 | 说明 | 是否必填 |
+  | ------- | ---- | ---- | -------- |
+  | book_id | int  |      | Y        |
+
+  
+
 ### 6.7 上传接口
 - 请求地址:http://120.196.150.190/upload_book
 
@@ -224,6 +238,7 @@ book表
   | description  | string |      | N        |
   | book_file    | file   |      | Y        |
   | publish_date | string |      | N        |
+  | book_cover   | file   |      | N        |
 
 - 返回body参数
 
