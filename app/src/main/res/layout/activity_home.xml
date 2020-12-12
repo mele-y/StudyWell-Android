@@ -70,6 +70,9 @@
         <com.example.studywell.pojo.ListViewForScrollView
             android:id="@+id/bookListView"
             android:layout_width="match_parent"
+            android:divider="#FFFFFF"
+            android:dividerHeight="5dp"
+            android:layout_marginTop="5dp"
             android:layout_height="wrap_content"></com.example.studywell.pojo.ListViewForScrollView>
 
 

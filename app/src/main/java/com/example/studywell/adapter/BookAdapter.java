@@ -23,12 +23,8 @@ public class BookAdapter extends ArrayAdapter<Book> {
     class ViewHolder {
 //        ImageView bookImage;
         TextView bookName;
-        TextView book_author;
-        TextView book_description;
-        TextView upload_date;
-        TextView book_publication;
-        TextView publish_date;
-
+        TextView uploadTime;
+        TextView bookDescription;
     }
 
     public BookAdapter(@NonNull Context context, int resource, @NonNull List<Book> objects) {
@@ -51,11 +47,8 @@ public class BookAdapter extends ArrayAdapter<Book> {
             viewHolder = new ViewHolder();
             // viewHolder.fruitImage = (ImageView) view.findViewById(R.id.fruit_image);
             viewHolder.bookName = view.findViewById (R.id.book_name);
-            viewHolder.book_author = view.findViewById (R.id.book_auther);
-            viewHolder.book_description = view.findViewById (R.id.book_description);
-            viewHolder.upload_date = view.findViewById (R.id.upload_date);
-            viewHolder.book_publication = view.findViewById (R.id.book_publication);
-            viewHolder.publish_date = view.findViewById (R.id.publish_date);
+           viewHolder.bookDescription = view.findViewById(R.id.book_description);
+           viewHolder.uploadTime = view.findViewById(R.id.upload_time);
 
             view.setTag(viewHolder); // 将ViewHolder存储在View中
         }
@@ -68,11 +61,8 @@ public class BookAdapter extends ArrayAdapter<Book> {
         // TextView bookName = (TextView) view.findViewById(R.id.book_name);
         // bookImage.setImageResource();
         viewHolder.bookName.setText(book.getBook_name());
-        viewHolder.book_author.setText(book.getAuthor());
-        viewHolder.book_description.setText(book.getBook_description());
-        viewHolder.upload_date.setText(book.getUpload_date());
-        viewHolder.book_publication.setText(book.getPublication());
-        viewHolder.publish_date.setText(book.getPublish_date());
+        viewHolder.bookDescription.setText(book.getBook_description());
+        viewHolder.uploadTime.setText(book.getUpload_date());
         return view;
     }
 }

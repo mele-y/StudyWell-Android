@@ -41,7 +41,9 @@
         </activity> <!-- 启动界面 -->
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/QMUI.Compat"></activity>
+            android:theme="@style/QMUI.Compat">
+
+        </activity>
         <activity
             android:name=".RegisterActivity"
             android:theme="@style/QMUI.Compat" />
