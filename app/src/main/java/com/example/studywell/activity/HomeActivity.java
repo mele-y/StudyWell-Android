@@ -1,6 +1,8 @@
 package com.example.studywell.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.example.studywell.adapter.BookAdapter;
+import com.example.studywell.adapter.BookRecyclerViewAdapter;
 import com.example.studywell.pojo.Book;
 import com.example.studywell.pojo.BookList;
 import com.example.studywell.pojo.Res;
@@ -36,7 +39,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     // 存储
     private SharedPreferences mSpf;
 
-    private BookAdapter bookAdapter;
+    private BookRecyclerViewAdapter bookAdapter;
 
     public static HomeActivity homeActivity;
 
@@ -70,19 +73,25 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         mSpf = getSharedPreferences("user", MODE_PRIVATE);
         readInfo();
 
-        // 使用android内置的listItem控件
-        bookAdapter = new BookAdapter(HomeActivity.this,
-                R.layout.book_card, books);
-        listView = findViewById(R.id.bookListView);
-        listView.setAdapter(bookAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Book book = books.get(position);
-                Toast.makeText(HomeActivity.this, book.getBook_id()+"", Toast.LENGTH_SHORT).show();
-            }
-        });
+        RecyclerView recyclerView = findViewById(R.id.bookRecyclerView);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        bookAdapter = new BookRecyclerViewAdapter(books);
+        recyclerView.setAdapter(bookAdapter);
+
+//        // 使用android内置的listItem控件
+//        bookAdapter = new BookAdapter(HomeActivity.this,
+//                R.layout.book_card, books);
+//        listView = findViewById(R.id.bookListView);
+//        listView.setAdapter(bookAdapter);
+//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view,
+//                                    int position, long id) {
+//                Book book = books.get(position);
+//                Toast.makeText(HomeActivity.this, book.getBook_id()+"", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         // 获取书籍列表并将其与listView绑定
         initBooks();
