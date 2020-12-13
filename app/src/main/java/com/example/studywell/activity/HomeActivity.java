@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,7 +49,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private FloatingActionButton nextPageBn;
     private FloatingActionButton previousPageBn;
     private FloatingSearchView mSearchView; // 搜索框
-
+    private FloatingActionButton uploadPageBn;
     // 关键字，这里默认为空字符串，不然null查询不到结果
     private String mLastQuery = "";
 
@@ -64,10 +65,17 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         nextPageBn = findViewById(R.id.next_page_button);
         previousPageBn = findViewById(R.id.previous_page_button);
         mSearchView = findViewById(R.id.floating_search_view);
-
+        uploadPageBn = findViewById(R.id.upload_float_button);
         /* 绑定点击事件 */
         nextPageBn.setOnClickListener(this);
         previousPageBn.setOnClickListener(this);
+        uploadPageBn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, UploadActivity.class);
+                startActivity(intent);
+            }
+        });
         mSearchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
             @Override
             public void onSuggestionClicked(final SearchSuggestion searchSuggestion) {
@@ -136,7 +144,6 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 curPage--;
                 getBooks();
                 break;
-
         }
     }
 
