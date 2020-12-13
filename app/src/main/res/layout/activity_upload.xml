@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?attr/qmui_config_color_blue"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    tools:context=".UploadActivity">
+    <!--background的color改了-->
+
+    <com.qmuiteam.qmui.widget.QMUITopBar
+        android:id="@+id/topbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/qmui_topbar_height" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/qmui_config_color_background">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <!--注册标题文字-->
+            <TextView
+                android:id="@+id/textview_validateinfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/qmui_group_list_section_header_footer_padding_vertical"
+                android:paddingLeft="?attr/qmui_content_padding_horizontal"
+                android:paddingRight="?attr/qmui_content_padding_horizontal"
+                android:paddingTop="@dimen/qmui_group_list_section_header_footer_padding_vertical"
+                android:text="上传书籍"
+                android:textColor="?attr/qmui_config_color_gray_3"
+                android:textSize="@dimen/qmui_group_list_section_header_footer_text_size" />
+            <!--边框分割细线-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/qmui_s_list_item_bg_with_border_bottom" />
+            <!--账户、手机号、密码输入框-->
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/qmui_config_color_white"
+                android:columnCount="2"
+                android:focusable="true"
+                android:focusableInTouchMode="true">
+                <!--书名-->
+                <!--padding：指定控件与内部控件之间的距离 left right改过-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/qmui_list_item_height"
+                    android:layout_gravity="fill_horizontal"
+                    android:background="@drawable/qmui_s_list_item_bg_with_border_bottom"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="?attr/qmui_content_padding_horizontal"
+                    android:paddingRight="?attr/qmui_content_padding_horizontal"
+                    android:text="书名"
+                    android:textColor="?attr/qmui_config_color_gray_1"
+                    android:textSize="?attr/qmui_common_list_item_title_h_text_size" />
+                <!--书名输入框-->
+                <EditText
+                    android:id="@+id/et_bookname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="fill"
+                    android:background="@drawable/qmui_divider_bottom_bitmap"
+                    android:hint="请输入书名"
+                    android:maxLength="20"
+                    android:textColor="?attr/qmui_config_color_gray_5"
+                    android:textSize="?attr/qmui_common_list_item_detail_h_text_size" />
+                <!--作者-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/qmui_list_item_height"
+                    android:layout_gravity="fill_horizontal"
+                    android:background="@drawable/qmui_s_list_item_bg_with_border_bottom"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="?attr/qmui_content_padding_horizontal"
+                    android:paddingRight="?attr/qmui_content_padding_horizontal"
+                    android:text="作者"
+                    android:textColor="?attr/qmui_config_color_gray_1"
+                    android:textSize="?attr/qmui_common_list_item_title_h_text_size" />
+                <!--作者输入框-->
+                <EditText
+                    android:id="@+id/et_author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="fill"
+                    android:background="@drawable/qmui_divider_bottom_bitmap"
+                    android:hint="请输入作者"
+                    android:maxLength="20"
+                    android:textColor="?attr/qmui_config_color_gray_5"
+                    android:textSize="?attr/qmui_common_list_item_detail_h_text_size" />
+                <!--出版社-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/qmui_list_item_height"
+                    android:layout_gravity="fill_horizontal"
+                    android:background="@drawable/qmui_s_list_item_bg_with_border_bottom"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="?attr/qmui_content_padding_horizontal"
+                    android:paddingRight="?attr/qmui_content_padding_horizontal"
+                    android:text="出版社"
+                    android:textColor="?attr/qmui_config_color_gray_1"
+                    android:textSize="?attr/qmui_common_list_item_title_h_text_size" />
+                <!--出版社输入框-->
+                <EditText
+                    android:id="@+id/et_publication"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="fill"
+                    android:background="@drawable/qmui_divider_bottom_bitmap"
+                    android:hint="请输入出版社"
+                    android:maxLength="20"
+                    android:textColor="?attr/qmui_config_color_gray_5"
+                    android:textSize="?attr/qmui_common_list_item_detail_h_text_size" />
+                <!--出版日期-->
+                <!--padding：指定控件与内部控件之间的距离 left right改过-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/qmui_list_item_height"
+                    android:layout_gravity="fill_horizontal"
+                    android:background="@drawable/qmui_s_list_item_bg_with_border_bottom"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="?attr/qmui_content_padding_horizontal"
+                    android:paddingRight="?attr/qmui_content_padding_horizontal"
+                    android:text="出版日期"
+                    android:textColor="?attr/qmui_config_color_gray_1"
+                    android:textSize="?attr/qmui_common_list_item_title_h_text_size" />
+                <!--出版日期输入框-->
+                <EditText
+                    android:id="@+id/et_pubdate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="fill"
+                    android:background="@drawable/qmui_divider_bottom_bitmap"
+                    android:hint="请输入出版日期"
+                    android:maxLength="20"
+                    android:textColor="?attr/qmui_config_color_gray_5"
+                    android:textSize="?attr/qmui_common_list_item_detail_h_text_size" />
+                <!--书籍描述-->
+                <!--padding：指定控件与内部控件之间的距离 left right改过-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/qmui_list_item_height"
+                    android:layout_gravity="fill_horizontal"
+                    android:background="@drawable/qmui_s_list_item_bg_with_border_bottom"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="?attr/qmui_content_padding_horizontal"
+                    android:paddingRight="?attr/qmui_content_padding_horizontal"
+                    android:text="书籍描述"
+                    android:textColor="?attr/qmui_config_color_gray_1"
+                    android:textSize="?attr/qmui_common_list_item_title_h_text_size" />
+                <!--书籍描述输入框-->
+                <EditText
+                    android:id="@+id/et_description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="fill"
+                    android:background="@drawable/qmui_divider_bottom_bitmap"
+                    android:hint="请输入书籍描述"
+                    android:maxLength="20"
+                    android:textColor="?attr/qmui_config_color_gray_5"
+                    android:textSize="?attr/qmui_common_list_item_detail_h_text_size" />
+
+                <!--选择封面-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/qmui_list_item_height"
+                    android:layout_gravity="fill_horizontal"
+                    android:background="@drawable/qmui_s_list_item_bg_with_border_bottom"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="?attr/qmui_content_padding_horizontal"
+                    android:paddingRight="?attr/qmui_content_padding_horizontal"
+                    android:text="选择封面"
+                    android:textColor="?attr/qmui_config_color_gray_1"
+                    android:textSize="?attr/qmui_common_list_item_title_h_text_size" />
+                <!--文件选择-->
+                <TextView
+                    android:id="@+id/btn_choosecover"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="fill"
+                    android:background="@drawable/qmui_divider_bottom_bitmap"
+                    android:hint="点击获取封面"
+                    android:gravity="center_vertical"
+                    android:ellipsize="start"
+                    android:textColor="?attr/qmui_config_color_gray_5"
+                    android:textSize="?attr/qmui_common_list_item_detail_h_text_size" />
+
+
+                <!--选择文件-->
+                <!--padding：指定控件与内部控件之间的距离 left right改过-->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/qmui_list_item_height"
+                    android:layout_gravity="fill_horizontal"
+                    android:background="@drawable/qmui_s_list_item_bg_with_border_bottom"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="?attr/qmui_content_padding_horizontal"
+                    android:paddingRight="?attr/qmui_content_padding_horizontal"
+                    android:text="选择文件"
+                    android:textColor="?attr/qmui_config_color_gray_1"
+                    android:textSize="?attr/qmui_common_list_item_title_h_text_size" />
+                <!--文件选择-->
+                <TextView
+                    android:id="@+id/btn_choosebook"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="fill"
+                    android:background="@drawable/qmui_divider_bottom_bitmap"
+                    android:hint="点击获取文件"
+                    android:gravity="center_vertical"
+                    android:ellipsize="start"
+                    android:textColor="?attr/qmui_config_color_gray_5"
+                    android:textSize="?attr/qmui_common_list_item_detail_h_text_size" />
+
+            </GridLayout>
+
+
+
+            <!--注册按钮位置-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:background="@color/qmui_config_color_white"
+                android:orientation="horizontal"
+                android:padding="?attr/qmui_content_padding_horizontal">
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    />
+
+                <com.qmuiteam.qmui.widget.roundwidget.QMUIRoundButton
+                    android:id="@+id/btn_upload"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:clickable="true"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="上传"
+                    android:textSize="?attr/qmui_common_list_item_title_h_text_size"
+                    app:qmui_isRadiusAdjustBounds="true"
+                    />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

@@ -1,20 +1,20 @@
 package com.example.studywell.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.example.studywell.adapter.BookAdapter;
+import com.arlib.floatingsearchview.FloatingSearchView;
+import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
+import com.example.studywell.adapter.BookRecyclerViewAdapter;
 import com.example.studywell.pojo.Book;
 import com.example.studywell.pojo.BookList;
 import com.example.studywell.pojo.Res;
@@ -36,7 +36,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     // 存储
     private SharedPreferences mSpf;
 
-    private BookAdapter bookAdapter;
+    private BookRecyclerViewAdapter bookAdapter;
 
     public static HomeActivity homeActivity;
 
@@ -47,6 +47,10 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     // 控件
     private FloatingActionButton nextPageBn;
     private FloatingActionButton previousPageBn;
+    private FloatingSearchView mSearchView; // 搜索框
+
+    // 关键字，这里默认为空字符串，不然null查询不到结果
+    private String mLastQuery = "";
 
     /* 调试 */
     final String TAG = getClass().getSimpleName();
@@ -56,12 +60,28 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        /* 初始化控件 */
         nextPageBn = findViewById(R.id.next_page_button);
         previousPageBn = findViewById(R.id.previous_page_button);
+        mSearchView = findViewById(R.id.floating_search_view);
 
         /* 绑定点击事件 */
         nextPageBn.setOnClickListener(this);
         previousPageBn.setOnClickListener(this);
+        mSearchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
+            @Override
+            public void onSuggestionClicked(final SearchSuggestion searchSuggestion) {
+
+                mLastQuery = searchSuggestion.getBody();
+            }
+
+            @Override
+            public void onSearchAction(String query) {
+                mLastQuery = query;
+                Toast.makeText(HomeActivity.this, mLastQuery, Toast.LENGTH_SHORT).show();
+                getBooks();
+            }
+        });
 
         // 方便其它类显示Toast
         homeActivity = this;
@@ -70,21 +90,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         mSpf = getSharedPreferences("user", MODE_PRIVATE);
         readInfo();
 
-        // 使用android内置的listItem控件
-        bookAdapter = new BookAdapter(HomeActivity.this,
-                R.layout.book_card, books);
-        listView = findViewById(R.id.bookListView);
-        listView.setAdapter(bookAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Book book = books.get(position);
-                Toast.makeText(HomeActivity.this, book.getBook_id()+"", Toast.LENGTH_SHORT).show();
-            }
-        });
+        RecyclerView recyclerView = findViewById(R.id.bookRecyclerView);
+        StaggeredGridLayoutManager layoutManager = new
+                StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        recyclerView.setLayoutManager(layoutManager);
+        bookAdapter = new BookRecyclerViewAdapter(books);
+        recyclerView.setAdapter(bookAdapter);
 
-        // 获取书籍列表并将其与listView绑定
+        // 获取书籍列表并将其与recyclerView绑定
         initBooks();
 
     }
@@ -133,7 +146,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         String url = getString(R.string.baseUrl) + "/query";
         Map<String, String> params = new HashMap<>();
         params.put("page", String.valueOf(curPage));
-        params.put("info", "");
+        params.put("info", mLastQuery);
         OkhttpUtil.okHttpGet(url, params,new CallBackUtil.CallBackString() {
             @Override
             public void onFailure(Call call, Exception e) {

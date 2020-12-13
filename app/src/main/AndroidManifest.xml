@@ -22,28 +22,25 @@
         android:supportsRtl="true"
         android:theme="@style/MaterialDesignTheme"
         android:usesCleartextTraffic="true">
-
-        <activity android:name=".SpeechActivity">
-            <!-- 启动界面 -->
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".UploadActivity"></activity>
+        <activity android:name=".SpeechActivity"></activity>
 
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/file_paths" />
 
-
         <activity android:name=".HomeActivity">
 
+            <!-- 启动界面 -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".LoginActivity"
-            android:theme="@style/QMUI.Compat">
-
-        </activity>
+            android:theme="@style/QMUI.Compat"></activity>
         <activity
             android:name=".RegisterActivity"
             android:theme="@style/QMUI.Compat" />

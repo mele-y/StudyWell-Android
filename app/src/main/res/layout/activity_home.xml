@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
+
     android:orientation="vertical">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -21,7 +22,8 @@
             app:expandedTitleMarginStart="72dp"
             app:expandedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Expanded"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-            app:statusBarScrim="?attr/colorPrimaryVariant">
+            app:statusBarScrim="?attr/colorPrimaryVariant"
+            android:fitsSystemWindows="true">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -42,6 +44,7 @@
                 app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:menu="@menu/top_app_bar"
                 app:navigationIcon="@drawable/qmui_icon_topbar_back"
+                android:fitsSystemWindows="true"
                 app:title="@string/app_name" />
 
             <com.arlib.floatingsearchview.FloatingSearchView
@@ -68,14 +71,11 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <!-- Scrollable content -->
-        <com.example.studywell.pojo.ListViewForScrollView
-            android:id="@+id/bookListView"
+        <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-
-            android:divider="#FFFFFF"
-            android:dividerHeight="30dp"></com.example.studywell.pojo.ListViewForScrollView>
+            android:layout_height="match_parent"
+            android:id="@+id/bookRecyclerView">
+        </androidx.recyclerview.widget.RecyclerView>
 
 
     </androidx.core.widget.NestedScrollView>
