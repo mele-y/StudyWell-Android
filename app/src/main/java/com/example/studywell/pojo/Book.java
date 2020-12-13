@@ -9,6 +9,15 @@ public class Book {
     private String publish_date;
     private String upload_date;
     private String book_location;
+    private String book_cover_url;
+
+    public String getBook_cover_url() {
+        return book_cover_url;
+    }
+
+    public void setBook_cover_url(String book_cover_url) {
+        this.book_cover_url = book_cover_url;
+    }
 
     public int getBook_id() {
         return book_id;
@@ -85,6 +94,7 @@ public class Book {
                 ", publish_date='" + publish_date + '\'' +
                 ", upload_date='" + upload_date + '\'' +
                 ", book_location='" + book_location + '\'' +
+                ", book_cover_url='" + book_cover_url + '\'' +
                 '}';
     }
 }

@@ -23,22 +23,22 @@
         android:theme="@style/MaterialDesignTheme"
         android:usesCleartextTraffic="true">
 
-        <activity android:name=".SpeechActivity"></activity>
-
+        <activity android:name=".SpeechActivity">
+            <!-- 启动界面 -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
 
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/file_paths" />
 
+
         <activity android:name=".HomeActivity">
-            <!-- 程序主界面匹配的action以及category -->
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-                <!--             <action android:name="ACTION_HOME" />
-                            <category android:name="android.intent.category.DEFAULT" />-->
-            </intent-filter>
-        </activity> <!-- 启动界面 -->
+
+        </activity>
         <activity
             android:name=".LoginActivity"
             android:theme="@style/QMUI.Compat">
