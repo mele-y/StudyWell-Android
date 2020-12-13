@@ -1,8 +1,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:title="search"
-        android:id="@+id/search"
-        android:icon="@drawable/ic_search_black_24dp"
+        android:title="uplopad"
+        android:id="@+id/upload_icon"
+        android:icon="@drawable/upload"
+        app:showAsAction="ifRoom" />
+    <item
+        android:title="refresh"
+        android:id="@+id/refresh_icon"
+        android:icon="@drawable/refresh"
         app:showAsAction="ifRoom" />
 </menu>
