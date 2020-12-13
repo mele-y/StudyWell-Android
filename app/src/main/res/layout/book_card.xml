@@ -2,7 +2,7 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/card"
-    android:layout_width="250dp"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="10dp"
     android:layout_marginTop="5dp"
@@ -44,7 +44,7 @@
                     android:textAppearance="?attr/textAppearanceHeadline6"></TextView>
 
                 <TextView
-                    android:id="@+id/upload_time"
+                    android:id="@+id/book_author"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="upload_time"></TextView>

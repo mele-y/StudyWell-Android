@@ -70,20 +70,12 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+        <!-- Scrollable content -->
         <androidx.recyclerview.widget.RecyclerView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/bookRecyclerView">
         </androidx.recyclerview.widget.RecyclerView>
-
-        <!-- Scrollable content -->
-<!--        <com.example.studywell.pojo.ListViewForScrollView-->
-<!--            android:id="@+id/bookListView"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:divider="#FFFFFF"-->
-<!--            android:dividerHeight="5dp"-->
-<!--            android:layout_marginTop="5dp"-->
-<!--            android:layout_height="wrap_content"></com.example.studywell.pojo.ListViewForScrollView>-->
 
 
     </androidx.core.widget.NestedScrollView>

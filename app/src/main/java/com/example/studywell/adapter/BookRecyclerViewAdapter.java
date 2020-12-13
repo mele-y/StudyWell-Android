@@ -25,7 +25,7 @@ public class BookRecyclerViewAdapter extends RecyclerView.Adapter<BookRecyclerVi
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView bookName;
-        TextView uploadTime;
+        TextView bookAuthor;
         TextView bookDescription;
         ImageView coverImg;
         Button downloadBn;
@@ -35,7 +35,7 @@ public class BookRecyclerViewAdapter extends RecyclerView.Adapter<BookRecyclerVi
             super(view);
             bookName = view.findViewById(R.id.book_name);
             bookDescription = view.findViewById(R.id.book_description);
-            uploadTime = view.findViewById(R.id.upload_time);
+            bookAuthor = view.findViewById(R.id.book_author);
             downloadBn = view.findViewById(R.id.downloadBn);
             coverImg = view.findViewById(R.id.cover_pic);
             // 初始化点击事件对象
@@ -63,7 +63,7 @@ public class BookRecyclerViewAdapter extends RecyclerView.Adapter<BookRecyclerVi
         Book book = mBookList.get(position);
         holder.bookName.setText(book.getBook_name());
         holder.bookDescription.setText(book.getBook_description());
-        holder.uploadTime.setText(book.getUpload_date());
+        holder.bookAuthor.setText(book.getAuthor());
         // 为book_card的下载按钮设置点击事件
         holder.downloadBn.setOnClickListener(new BookRecyclerViewAdapter.MyListener(position));
         // 设置书籍封面
