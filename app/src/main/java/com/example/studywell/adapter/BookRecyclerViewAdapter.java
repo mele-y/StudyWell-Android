@@ -1,5 +1,7 @@
 package com.example.studywell.adapter;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,7 +67,7 @@ public class BookRecyclerViewAdapter extends RecyclerView.Adapter<BookRecyclerVi
         holder.bookDescription.setText(book.getBook_description());
         holder.bookAuthor.setText(book.getAuthor());
         // 为book_card的下载按钮设置点击事件
-        holder.downloadBn.setOnClickListener(new BookRecyclerViewAdapter.MyListener(position));
+        holder.downloadBn.setOnClickListener(new BookRecyclerViewAdapter.MyListener(book.getBook_id()));
         // 设置书籍封面
         Glide.with(HomeActivity.homeActivity).load(
                 book.getBook_cover_url()
@@ -79,17 +81,21 @@ public class BookRecyclerViewAdapter extends RecyclerView.Adapter<BookRecyclerVi
     }
 
     private class MyListener implements View.OnClickListener {
-        int mPosition;
+        int mBookId;
 
-        public MyListener(int inPosition) {
-            mPosition = inPosition;
+        public MyListener(int book_id) {
+            mBookId = book_id;
         }
 
         @Override
         public void onClick(View v) {
             // TODO Auto-generated method stub
-            Toast.makeText(HomeActivity.homeActivity, mPosition + "", Toast.LENGTH_SHORT).show();
-            Log.d(TAG, mPosition + "");
+            Intent intent= new Intent();
+            intent.setAction("android.intent.action.VIEW");
+//            Toast.makeText(HomeActivity.homeActivity, ""+mBookId, Toast.LENGTH_SHORT).show();
+            Uri content_url = Uri.parse("http://121.196.150.190/download_book?book_id=" + mBookId);
+            intent.setData(content_url);
+            HomeActivity.homeActivity.startActivity(intent);
         }
 
     }
