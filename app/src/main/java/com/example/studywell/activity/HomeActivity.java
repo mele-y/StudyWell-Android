@@ -166,6 +166,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         OkhttpUtil.okHttpGet(url, params,new CallBackUtil.CallBackString() {
             @Override
             public void onFailure(Call call, Exception e) {
+                swipeRefreshLayout.setRefreshing(false);
                 Toast.makeText(HomeActivity.this, "不能正常连接到服务器", Toast.LENGTH_SHORT).show();
             }
 
