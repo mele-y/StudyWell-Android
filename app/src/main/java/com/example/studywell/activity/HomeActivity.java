@@ -3,6 +3,7 @@ package com.example.studywell.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -50,6 +51,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private FloatingActionButton previousPageBn;
     private FloatingSearchView mSearchView; // 搜索框
     private FloatingActionButton uploadPageBn;
+    private SwipeRefreshLayout swipeRefreshLayout;
     // 关键字，这里默认为空字符串，不然null查询不到结果
     private String mLastQuery = "";
 
@@ -66,6 +68,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         previousPageBn = findViewById(R.id.previous_page_button);
         mSearchView = findViewById(R.id.floating_search_view);
         uploadPageBn = findViewById(R.id.upload_float_button);
+        swipeRefreshLayout =(SwipeRefreshLayout) findViewById(R.id.swipeRefesh);
         /* 绑定点击事件 */
         nextPageBn.setOnClickListener(this);
         previousPageBn.setOnClickListener(this);
@@ -76,13 +79,18 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
             }
         });
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                       return;
+            }
+        });
         mSearchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
             @Override
             public void onSuggestionClicked(final SearchSuggestion searchSuggestion) {
 
                 mLastQuery = searchSuggestion.getBody();
             }
-
             @Override
             public void onSearchAction(String query) {
                 mLastQuery = query;
