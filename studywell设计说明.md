@@ -9,25 +9,26 @@
 ## 3 数据库设计
 user表
 
-| 字段           | 类型    | 样例                               | 说明                     |
-| -------------- | ------- | ---------------------------------- | ------------------------ |
-| user_id        | integer | 1                                  | 用户标示符，主键，不可空 |
-| username       | text    | mele                               | 不可空                   |
-| password       | text    | showmethemoney                     | 不可空                   |
-| photo_location | text    | /www/wwwroot/user_photo/1_mele.jpg | 用于人脸比对的照片，     |
+| 字段           | 类型    | 样例                                           | 说明                     |
+| -------------- | ------- | ---------------------------------------------- | ------------------------ |
+| user_id        | integer | 1                                              | 用户标示符，主键，不可空 |
+| username       | text    | mele                                           | 不可空                   |
+| password       | text    | showmethemoney                                 | 不可空                   |
+| photo_location | text    | /www/wwwroot/test/static/user_photo/1_mele.jpg | 用于人脸比对的照片，     |
 
 book表
 
-| 字段             | 类型 | 样例                             | 说明                 |
-| ---------------- | ---- | -------------------------------- | -------------------- |
-| book_id          | int  | 12                               | 主键，不可空         |
-| book_name        | text | 白夜行                           | 不可空               |
-| author           | text | 东野圭吾                         | 可空                 |
-| publication      | text | 人民邮电出版社                   | 可空                 |
-| publish_date     | text | 2017-10-26                       | 可空                 |
-| book_description | text | 四大名著之一                     | 图书附加说明，可空   |
-| book_location    | text | /www/wwwroot/bookfile/白夜行.pdf | 图书存储位置，不可空 |
-| upload_date      | text | 2020-11-29 11:24                 | 上传时间，不可空     |
+| 字段             | 类型 | 样例                                                   | 说明                 |
+| ---------------- | ---- | ------------------------------------------------------ | -------------------- |
+| book_id          | int  | 12                                                     | 主键，不可空         |
+| book_name        | text | 白夜行                                                 | 不可空               |
+| author           | text | 东野圭吾                                               | 可空                 |
+| publication      | text | 人民邮电出版社                                         | 可空                 |
+| publish_date     | text | 2017-10-26                                             | 可空                 |
+| book_description | text | 四大名著之一                                           | 图书附加说明，可空   |
+| book_location    | text | /www/wwwroot/bookfile/白夜行.pdf                       | 图书存储位置，不可空 |
+| upload_date      | text | 2020-11-29 11:24                                       | 上传时间，不可空     |
+| book_cover_url   | text | http://121.196.150.190/static/book_cover/12_白夜行.jpg | 可空                 |
 
 ## 4 安卓程序activity说明
 
@@ -76,7 +77,7 @@ book表
 ## 6 接口设计
 ### 6.1 登录接口
 
-- 请求地址：http://120.196.150.190/login/
+- 请求地址：http://121.196.150.190/login/
 
 - 请求方式：post
 
@@ -154,9 +155,76 @@ book表
 
 ### 6.4 分页显示接口
 ### 6.5 查询接口
+- 请求地址 http://121.196.150.190/query
+
+- 请求方式 GET
+
+- 请求body参数
+
+| 参数名  | 类型   | 说明 | 是否必填 |
+| ------- | ----- | ---- | -------- |
+|  info   |string |      | N        |
+|  page   |  int  |      | Y        |
+
+- 返回参数说明
+
+  格式统一为json
+
+  | 参数   | 说明                                            |
+  | ------ | ----------------------------------------------- |
+  | code   | 1说明查询成功，0说明未查询到书籍                   |
+  | msg    | 1"query success" 2"cant find any books"          |
+  | page   | 当前页数                                         |
+  | pages  | 查询到的书籍有多少页                              |
+  | data   | 当前页数的书籍信息                                |
+
+  
+- 返回参数示例
+
+  ```
+  {
+     "code":1,
+     "msg":"query success",
+     "page":1,
+     "pages":1,
+     "data":[{"book_id":"1",
+       "book_name":"1984",
+       "author":"George Orwel",
+       "publication":"",
+       "book_description":"famous book",
+       "publish_date":"2010-04-15"
+       "upload_date":"2020-11-30 11:29"
+     },{
+     "book_id":"2",
+     ......
+     }
+     ]
+  }
+  {
+     "code":0,
+     "msg":"cant find any books",
+     "page":1,
+     "pages":0,
+     "data":[]
+  }
+  ```
+  
 ### 6.6 下载接口
+
+- 请求地址:http://121.196.150.190/download_book/
+
+- 请求方式：GET
+
+- URL请求参数:
+
+  | 参数名  | 类型 | 说明 | 是否必填 |
+  | ------- | ---- | ---- | -------- |
+  | book_id | int  |      | Y        |
+
+  
+
 ### 6.7 上传接口
-- 请求地址:http://120.196.150.190/upload_book
+- 请求地址:http://121.196.150.190/upload_book
 
 - 请求方式: POST
 
@@ -170,6 +238,7 @@ book表
   | description  | string |      | N        |
   | book_file    | file   |      | Y        |
   | publish_date | string |      | N        |
+  | book_cover   | file   |      | N        |
 
 - 返回body参数
 
