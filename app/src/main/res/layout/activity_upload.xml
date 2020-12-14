@@ -71,7 +71,6 @@
                     android:layout_gravity="fill"
                     android:background="@drawable/qmui_divider_bottom_bitmap"
                     android:hint="请输入书名"
-                    android:maxLength="20"
                     android:textColor="?attr/qmui_config_color_gray_5"
                     android:textSize="?attr/qmui_common_list_item_detail_h_text_size" />
                 <!--作者-->
@@ -94,7 +93,6 @@
                     android:layout_gravity="fill"
                     android:background="@drawable/qmui_divider_bottom_bitmap"
                     android:hint="请输入作者"
-                    android:maxLength="20"
                     android:textColor="?attr/qmui_config_color_gray_5"
                     android:textSize="?attr/qmui_common_list_item_detail_h_text_size" />
                 <!--出版社-->
@@ -141,7 +139,7 @@
                     android:layout_gravity="fill"
                     android:background="@drawable/qmui_divider_bottom_bitmap"
                     android:hint="请输入出版日期"
-                    android:maxLength="20"
+                    android:inputType="date"
                     android:textColor="?attr/qmui_config_color_gray_5"
                     android:textSize="?attr/qmui_common_list_item_detail_h_text_size" />
                 <!--书籍描述-->
@@ -165,7 +163,6 @@
                     android:layout_gravity="fill"
                     android:background="@drawable/qmui_divider_bottom_bitmap"
                     android:hint="请输入书籍描述"
-                    android:maxLength="20"
                     android:textColor="?attr/qmui_config_color_gray_5"
                     android:textSize="?attr/qmui_common_list_item_detail_h_text_size" />
 
@@ -181,7 +178,7 @@
                     android:text="选择封面"
                     android:textColor="?attr/qmui_config_color_gray_1"
                     android:textSize="?attr/qmui_common_list_item_title_h_text_size" />
-                <!--文件选择-->
+                <!--封面选择-->
                 <TextView
                     android:id="@+id/btn_choosecover"
                     android:layout_width="wrap_content"

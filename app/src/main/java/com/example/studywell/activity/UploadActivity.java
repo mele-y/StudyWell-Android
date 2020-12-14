@@ -55,9 +55,8 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
     private TextView btn_choosecover;
     private Button btn_upload;
 
-    private String path;
+    private String bookpath;
     public static final int CHOOSE_PHOTO = 2;
-    private File outputImage;
     private Uri reg_imageUri;
 
     @Override
@@ -88,6 +87,7 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
                 break;
             case R.id.btn_choosecover:
                 chooseCover();
+                break;
             case R.id.btn_upload:
                 uploadBook();
                 break;
@@ -102,7 +102,6 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
     }
 
     private void chooseCover(){
-        outputImage = null;
         Toast.makeText(UploadActivity.this, "选择照片", Toast.LENGTH_SHORT).show();
         if (ContextCompat.checkSelfPermission(UploadActivity.this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.
@@ -118,19 +117,16 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
 
     private void uploadBook(){
 
-        if (path == null) {
-            Toast.makeText(this, "文件不能为空", Toast.LENGTH_SHORT).show();
+        String bookname = String.valueOf(et_bookname.getText());
+        if(bookname.equals("")){
+            Toast.makeText(this, "书名不能为空", Toast.LENGTH_SHORT).show();
+            Log.i("=====================书名", bookname);
             return;
         }
-        File bookfile = new File(path);
-
-        String bookname = String.valueOf(et_bookname.getText());
         String author = String.valueOf(et_author.getText());
         String publication = String.valueOf(et_publication.getText());
         String pubdate = String.valueOf(et_pubdate.getText());
         String description = String.valueOf(et_description.getText());
-
-        Log.i("=====================", String.valueOf(reg_imageUri));
 
         String url = "http://121.196.150.190/upload_book";//替换成自己的服务器地址
 
@@ -141,11 +137,21 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
         params.put("description", description);
         params.put("publish_date", pubdate);
 
-        outputImage = new File(RealFilePathUtil.getPath(this, reg_imageUri));
+        if (bookpath == null) {
+            Toast.makeText(this, "文件不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        File bookfile = new File(bookpath);
+
+        if (reg_imageUri == null) {
+            Toast.makeText(this, "封面不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        File imagefile = new File(RealFilePathUtil.getPath(this, reg_imageUri));
 
         HashMap<String, File> filemap = new HashMap<>();
         filemap.put("book_file",bookfile);
-        filemap.put("book_cover",outputImage);
+        filemap.put("book_cover",imagefile);
 
         OkhttpUtil.okHttpUploadMapFile(url, filemap, OkhttpUtil.FILE_TYPE_FILE, params, new CallBackUtil.CallBackString() {
             @Override
@@ -174,8 +180,15 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
                 }
             }
         });
-
-
+        et_bookname.setText("");
+        et_author.setText("");
+        et_publication.setText("");
+        et_pubdate.setText("");
+        et_description.setText("");
+        btn_choosebook.setText("");
+        btn_choosecover.setText("");
+        bookpath=null;
+        reg_imageUri=null;
     }
 
     private void openAlbum() {
@@ -191,9 +204,9 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
             if (resultCode == RESULT_OK) {
                 Uri uri = data.getData();
                 if (uri != null) {
-                    path = RealFilePathUtil.getPath(UploadActivity.this, uri);
-                    Log.i("==================path",path);
-                    btn_choosebook.setText(path);
+                    bookpath = RealFilePathUtil.getPath(UploadActivity.this, uri);
+                    Log.i("==================path",bookpath);
+                    btn_choosebook.setText(bookpath);
                 }
             }
         }
