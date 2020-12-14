@@ -138,8 +138,8 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
         params.put("book_name", bookname);
         params.put("author", author);
         params.put("publication", publication);
-        params.put("description", pubdate);
-        params.put("publish_date", description);
+        params.put("description", description);
+        params.put("publish_date", pubdate);
 
         outputImage = new File(RealFilePathUtil.getPath(this, reg_imageUri));
 
