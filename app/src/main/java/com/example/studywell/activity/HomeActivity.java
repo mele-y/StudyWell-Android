@@ -3,6 +3,7 @@ package com.example.studywell.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -38,7 +39,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private SharedPreferences mSpf;
 
     private BookRecyclerViewAdapter bookAdapter;
-
+    private SwipeRefreshLayout swipeRefreshLayout;
     public static HomeActivity homeActivity;
 
     // 当前页
@@ -69,6 +70,14 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         /* 绑定点击事件 */
         nextPageBn.setOnClickListener(this);
         previousPageBn.setOnClickListener(this);
+        swipeRefreshLayout = findViewById(R.id.swipeRefresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mLastQuery = "";
+                getBooks();
+            }
+        });
         uploadPageBn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -162,6 +171,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
             @Override
             public void onResponse(String response) {
+                swipeRefreshLayout.setRefreshing(false);
                 Res res = JSON.parseObject(response, Res.class);
                 switch (res.getCode()) {
                     // 查询成功

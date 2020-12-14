@@ -16,14 +16,14 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
             app:collapsedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Collapsed"
             app:contentScrim="?attr/colorPrimary"
             app:expandedTitleMarginBottom="28dp"
             app:expandedTitleMarginStart="72dp"
             app:expandedTitleTextAppearance="@style/TextAppearance.App.CollapsingToolbar.Expanded"
             app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-            app:statusBarScrim="?attr/colorPrimaryVariant"
-            android:fitsSystemWindows="true">
+            app:statusBarScrim="?attr/colorPrimaryVariant">
 
             <ImageView
                 android:layout_width="match_parent"
@@ -40,11 +40,11 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="@android:color/transparent"
                 android:elevation="0dp"
+                android:fitsSystemWindows="true"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll|enterAlways|snap"
                 app:menu="@menu/top_app_bar"
                 app:navigationIcon="@drawable/qmui_icon_topbar_back"
-                android:fitsSystemWindows="true"
                 app:title="@string/app_name" />
 
             <com.arlib.floatingsearchview.FloatingSearchView
@@ -64,21 +64,30 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-
-    <androidx.core.widget.NestedScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        >
 
-        <!-- Scrollable content -->
-        <androidx.recyclerview.widget.RecyclerView
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/bookRecyclerView">
-        </androidx.recyclerview.widget.RecyclerView>
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
 
-    </androidx.core.widget.NestedScrollView>
+            <!-- Scrollable content -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/bookRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"></androidx.recyclerview.widget.RecyclerView>
+
+
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
     <com.getbase.floatingactionbutton.FloatingActionsMenu
         android:id="@+id/jump_button"
@@ -109,6 +118,7 @@
             fab:fab_colorPressed="@color/pressed_color"
             fab:fab_size="mini"
             fab:fab_title="pervious page floating button" />
+
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/upload_float_button"
             android:layout_width="wrap_content"
