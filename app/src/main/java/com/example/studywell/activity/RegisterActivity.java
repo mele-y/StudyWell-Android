@@ -212,6 +212,14 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         } else {
             reg_imageUri = Uri.fromFile(outputImage);
         }
+        /*if (ContextCompat.checkSelfPermission(RegisterActivity.this,
+                Manifest.permission.CAMERA) != PackageManager.
+                PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(RegisterActivity.this, new
+                    String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+        }*/
+        ActivityCompat.requestPermissions(RegisterActivity.this, new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},1);
+
         // 调用摄像头
         Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
         intent.putExtra(MediaStore.EXTRA_OUTPUT, reg_imageUri);
@@ -226,7 +234,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                 Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.
                 PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(RegisterActivity.this, new
-                    String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                    String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 2);
         } else {
             openAlbum();
         }
@@ -341,7 +349,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
     public void onRequestPermissionsResult(int requestCode, String[] permissions,
                                            int[] grantResults) {
         switch (requestCode) {
-            case 1:
+            case 2:
 
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.
                         PERMISSION_GRANTED) {
