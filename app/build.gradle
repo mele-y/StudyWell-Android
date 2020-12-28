@@ -57,4 +57,7 @@ dependencies {
     //图片加载Glide依赖
     implementation 'com.github.bumptech.glide:glide:4.5.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
+
+    //等待提示框依赖
+    implementation 'com.github.ForgetAll:LoadingDialog:v1.0.1'
 }

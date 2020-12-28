@@ -5,11 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.ContentUris;
@@ -144,8 +139,10 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
         File bookfile = new File(bookpath);
 
         if (reg_imageUri == null) {
-            Toast.makeText(this, "封面不能为空", Toast.LENGTH_SHORT).show();
-            return;
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_book);
+            reg_imageUri = Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "", ""));
+            //Toast.makeText(this, "封面不能为空", Toast.LENGTH_SHORT).show();
+            //return;
         }
         File imagefile = new File(RealFilePathUtil.getPath(this, reg_imageUri));
 
