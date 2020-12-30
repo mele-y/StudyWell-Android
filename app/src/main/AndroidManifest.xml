@@ -23,17 +23,15 @@
         android:theme="@style/MaterialDesignTheme"
         android:usesCleartextTraffic="true">
 
-
         <meta-data
             android:name="com.google.android.actions"
             android:resource="@xml/file_paths" />
-        <activity android:name=".UploadActivity"
-            android:theme="@style/QMUI.Compat"></activity>
-        <activity android:name=".SpeechActivity"></activity>
-        <activity android:name=".HomeActivity">
 
-        </activity>
-
+        <activity
+            android:name=".UploadActivity"
+            android:theme="@style/QMUI.Compat" />
+        <activity android:name=".SpeechActivity" />
+        <activity android:name=".HomeActivity"></activity>
         <activity
             android:name=".LoginActivity"
             android:theme="@style/QMUI.Compat">
