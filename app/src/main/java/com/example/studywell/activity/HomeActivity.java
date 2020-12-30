@@ -1,22 +1,33 @@
 package com.example.studywell.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.arlib.floatingsearchview.FloatingSearchView;
 import com.arlib.floatingsearchview.suggestions.model.SearchSuggestion;
+import com.baidu.speech.EventListener;
+import com.baidu.speech.EventManager;
+import com.baidu.speech.EventManagerFactory;
+import com.baidu.speech.asr.SpeechConstant;
 import com.example.studywell.adapter.BookRecyclerViewAdapter;
+import com.example.studywell.pojo.ASRresponse;
 import com.example.studywell.pojo.Book;
 import com.example.studywell.pojo.BookList;
 import com.example.studywell.pojo.Res;
@@ -31,7 +42,7 @@ import java.util.Map;
 
 import okhttp3.Call;
 
-public class HomeActivity extends AppCompatActivity implements View.OnClickListener{
+public class HomeActivity extends AppCompatActivity implements View.OnClickListener, EventListener {
 
     private List<Book> books = new ArrayList<>();
     private ListView listView;
@@ -39,7 +50,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private SharedPreferences mSpf;
 
     private BookRecyclerViewAdapter bookAdapter;
-
+    private SwipeRefreshLayout swipeRefreshLayout;
     public static HomeActivity homeActivity;
 
     // 当前页
@@ -51,7 +62,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     private FloatingActionButton previousPageBn;
     private FloatingSearchView mSearchView; // 搜索框
     private FloatingActionButton uploadPageBn;
-    private SwipeRefreshLayout swipeRefreshLayout;
+    private Button voiceBn;
+    private EventManager asr;//语音识别核心库
     // 关键字，这里默认为空字符串，不然null查询不到结果
     private String mLastQuery = "";
 
@@ -63,15 +75,28 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        /* 语音识别初始化工作 */
+        initPermission();  // 麦克风动态获取权限
+        asr = EventManagerFactory.create(this, "asr");  // 初始化EventManager对象
+        asr.registerListener(this);  //注册自己的输出事件类
+
         /* 初始化控件 */
         nextPageBn = findViewById(R.id.next_page_button);
         previousPageBn = findViewById(R.id.previous_page_button);
         mSearchView = findViewById(R.id.floating_search_view);
         uploadPageBn = findViewById(R.id.upload_float_button);
-        swipeRefreshLayout =(SwipeRefreshLayout) findViewById(R.id.swipeRefesh);
+        voiceBn = findViewById(R.id.action_voice_rec);  // 语音识别按钮
         /* 绑定点击事件 */
         nextPageBn.setOnClickListener(this);
         previousPageBn.setOnClickListener(this);
+        swipeRefreshLayout = findViewById(R.id.swipeRefresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mLastQuery = "";
+                getBooks();
+            }
+        });
         uploadPageBn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -79,23 +104,39 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 startActivity(intent);
             }
         });
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                       return;
-            }
-        });
+
         mSearchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
             @Override
             public void onSuggestionClicked(final SearchSuggestion searchSuggestion) {
 
                 mLastQuery = searchSuggestion.getBody();
             }
+
             @Override
             public void onSearchAction(String query) {
                 mLastQuery = query;
                 Toast.makeText(HomeActivity.this, mLastQuery, Toast.LENGTH_SHORT).show();
                 getBooks();
+            }
+        });
+        // 语音识别按钮的长按事件
+        voiceBn.setOnTouchListener(new View.OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View arg0, MotionEvent event) {
+                // TODO Auto-generated method stub
+                int action = event.getAction();
+                // 按下
+                if (action == MotionEvent.ACTION_DOWN) {
+                    asr.send(SpeechConstant.ASR_START, null, null, 0, 0);
+
+                }
+                // 松开
+                else if (action == MotionEvent.ACTION_UP) {
+                    asr.send(SpeechConstant.ASR_STOP, null, null, 0, 0);
+                }
+                return false;
+
             }
         });
 
@@ -165,11 +206,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         OkhttpUtil.okHttpGet(url, params,new CallBackUtil.CallBackString() {
             @Override
             public void onFailure(Call call, Exception e) {
+                swipeRefreshLayout.setRefreshing(false);
                 Toast.makeText(HomeActivity.this, "不能正常连接到服务器", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onResponse(String response) {
+                swipeRefreshLayout.setRefreshing(false);
                 Res res = JSON.parseObject(response, Res.class);
                 switch (res.getCode()) {
                     // 查询成功
@@ -196,5 +239,64 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
+    }
+
+    /**
+     * 自定义输出事件类 EventListener 回调方法
+     */
+    @Override
+    public void onEvent(String name, String params, byte[] data, int offset, int length) {
+
+        if (name.equals(SpeechConstant.CALLBACK_EVENT_ASR_PARTIAL)) {
+            // 识别相关的结果都在这里
+            if (params == null || params.isEmpty()) {
+                return;
+            }
+            if (params.contains("\"final_result\"")) {
+                // 一句话的最终识别结果
+                ASRresponse asRresponse = JSON.parseObject(params, ASRresponse.class);
+                if (asRresponse == null) return;
+                //从日志中，得出Best_result的值才是需要的，但是后面跟了一个中文输入法下的逗号，
+                if (asRresponse.getBest_result().contains("，")) {//包含逗号  则将逗号替换为空格，这个地方还会问题，还可以进一步做出来，你知道吗？
+                    mLastQuery = asRresponse.getBest_result().replace('，', ' ').trim();//替换为空格之后，通过trim去掉字符串的首尾空格
+                } else {//不包含
+                    mLastQuery = asRresponse.getBest_result().trim();
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //发送取消事件
+        asr.send(SpeechConstant.ASR_CANCEL, "{}", null, 0, 0);
+        //退出事件管理器
+        // 必须与registerListener成对出现，否则可能造成内存泄露
+        asr.unregisterListener(this);
+    }
+
+    /**
+     * android 6.0 以上需要动态申请权限
+     */
+    private void initPermission() {
+        String permissions[] = {Manifest.permission.RECORD_AUDIO,
+                Manifest.permission.ACCESS_NETWORK_STATE,
+                Manifest.permission.INTERNET,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
+
+        ArrayList<String> toApplyList = new ArrayList<String>();
+
+        for (String perm : permissions) {
+            if (PackageManager.PERMISSION_GRANTED != ContextCompat.checkSelfPermission(this, perm)) {
+                toApplyList.add(perm);
+            }
+        }
+        String tmpList[] = new String[toApplyList.size()];
+        if (!toApplyList.isEmpty()) {
+            ActivityCompat.requestPermissions(this, toApplyList.toArray(tmpList), 123);
+        }
+
     }
 }

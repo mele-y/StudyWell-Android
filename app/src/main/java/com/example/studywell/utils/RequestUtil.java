@@ -27,17 +27,17 @@ import okio.Sink;
  */
 
 class RequestUtil {
-    private String mMetyodType;     //请求方式，目前只支持get和post
+    private final String mMetyodType;     //请求方式，目前只支持get和post
     private String mUrl;            //接口
-    private Map<String, String> mParamsMap; //键值对类型的参数，只有这一种情况下区分post和get。
-    private String mJsonStr;//json类型的参数，post方式
-    private File mFile;//文件的参数，post方式,只有一个文件
-    private List<File> mfileList;//文件集合，这个集合对应一个key，即mfileKey
-    private String mfileKey;//上传服务器的文件对应的key
-    private Map<String, File> mfileMap;//文件集合，每个文件对应一个key
-    private String mFileType;//文件类型的参数，与file同时存在
-    private Map<String, String> mHeaderMap;//头参数
-    private CallBackUtil mCallBack;//回调接口
+    private final Map<String, String> mParamsMap; //键值对类型的参数，只有这一种情况下区分post和get。
+    private final String mJsonStr;//json类型的参数，post方式
+    private final File mFile;//文件的参数，post方式,只有一个文件
+    private final List<File> mfileList;//文件集合，这个集合对应一个key，即mfileKey
+    private final String mfileKey;//上传服务器的文件对应的key
+    private final Map<String, File> mfileMap;//文件集合，每个文件对应一个key
+    private final String mFileType;//文件类型的参数，与file同时存在
+    private final Map<String, String> mHeaderMap;//头参数
+    private final CallBackUtil mCallBack;//回调接口
     private OkHttpClient mOkHttpClient;//OKhttpClient对象
     private Request mOkHttpRequest;//请求对象
     private Request.Builder mRequestBuilder;//请求对象的构建者
@@ -275,7 +275,7 @@ class RequestUtil {
         private final RequestBody requestBody;
         //包装完成的BufferedSink
         private BufferedSink bufferedSink;
-        private CallBackUtil callBack;
+        private final CallBackUtil callBack;
 
         ProgressRequestBody(RequestBody requestBody, CallBackUtil callBack) {
             this.requestBody = requestBody;
