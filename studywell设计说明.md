@@ -161,11 +161,12 @@ book表
 
 - 请求body参数
 
-| 参数名  | 类型   | 说明 | 是否必填 |
-| ------- | ----- | ---- | -------- |
-|  info   |string |      | N        |
-|  page   |  int  |      | Y        |
-
+| 参数名      | 类型   | 说明 | 是否必填 |
+| ----------- | ----- | ---- | -------- |
+|  info       |string |      | Y        |
+|  page       |  int  |      | Y        |
+|  category   |string |      | Y        |
+info和category不能为空 可以为""
 - 返回参数说明
 
   格式统一为json
