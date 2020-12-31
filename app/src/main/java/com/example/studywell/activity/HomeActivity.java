@@ -76,16 +76,17 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_home);
 
         /* 语音识别初始化工作 */
-        initPermission();  // 麦克风动态获取权限
+        /*
+       /initPermission();  // 麦克风动态获取权限
         asr = EventManagerFactory.create(this, "asr");  // 初始化EventManager对象
         asr.registerListener(this);  //注册自己的输出事件类
-
+       */
         /* 初始化控件 */
         nextPageBn = findViewById(R.id.next_page_button);
         previousPageBn = findViewById(R.id.previous_page_button);
         mSearchView = findViewById(R.id.floating_search_view);
         uploadPageBn = findViewById(R.id.upload_float_button);
-        voiceBn = findViewById(R.id.action_voice_rec);  // 语音识别按钮
+       // voiceBn = findViewById(R.id.action_voice_rec);  // 语音识别按钮
         /* 绑定点击事件 */
         nextPageBn.setOnClickListener(this);
         previousPageBn.setOnClickListener(this);
@@ -120,6 +121,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         // 语音识别按钮的长按事件
+        /*
         voiceBn.setOnTouchListener(new View.OnTouchListener() {
 
             @Override
@@ -139,7 +141,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
             }
         });
-
+        */
         // 方便其它类显示Toast
         homeActivity = this;
 
