@@ -30,9 +30,7 @@
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
-
                 android:src="@drawable/demo_book_pic" />
-
             <com.google.android.material.appbar.MaterialToolbar
                 android:id="@+id/topAppBar"
                 style="@style/Widget.MaterialComponents.Toolbar.Primary"
@@ -43,10 +41,8 @@
                 android:fitsSystemWindows="true"
                 app:layout_collapseMode="pin"
                 app:layout_scrollFlags="scroll|enterAlways|snap"
-                app:menu="@menu/top_app_bar"
-                app:navigationIcon="@drawable/qmui_icon_topbar_back"
                 app:title="@string/app_name" />
-
+<!--            app:navigationIcon="@drawable/qmui_icon_topbar_back"-->
             <com.arlib.floatingsearchview.FloatingSearchView
                 android:id="@+id/floating_search_view"
                 android:layout_width="match_parent"

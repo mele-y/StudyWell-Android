@@ -1,5 +1,6 @@
 package com.example.studywell.activity;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -13,10 +14,16 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -44,28 +51,32 @@ import okhttp3.Call;
 
 public class HomeActivity extends AppCompatActivity implements View.OnClickListener, EventListener {
 
-    private List<Book> books = new ArrayList<>();
-    private ListView listView;
-    // 存储
-    private SharedPreferences mSpf;
+    private List<Book> books = new ArrayList<>();  // 书籍列表
 
-    private BookRecyclerViewAdapter bookAdapter;
-    private SwipeRefreshLayout swipeRefreshLayout;
-    public static HomeActivity homeActivity;
+    private SharedPreferences mSpf;  // 存储
 
-    // 当前页
-    private int curPage;
-    private int pageNum;
+    private BookRecyclerViewAdapter bookAdapter;  // 列表适配器
+    private SwipeRefreshLayout swipeRefreshLayout;  // 下拉刷新
+    public static HomeActivity homeActivity;    // 供外部Toast调用
+
+    // 分页参数
+    private int curPage;  // 当前页
+    private int pageNum;  // 页数
 
     // 控件
-    private FloatingActionButton nextPageBn;
-    private FloatingActionButton previousPageBn;
-    private FloatingSearchView mSearchView; // 搜索框
-    private FloatingActionButton uploadPageBn;
-    private Button voiceBn;
-    private EventManager asr;//语音识别核心库
-    // 关键字，这里默认为空字符串，不然null查询不到结果
+    private FloatingActionButton nextPageBn;  // 下一页
+    private FloatingActionButton previousPageBn;  // 上一页
+    private FloatingSearchView mSearchView;    // 搜索框
+    private FloatingActionButton uploadPageBn; // 上传按钮
+
+    private EventManager asr;  // 语音识别核心库
+
+    // 查询关键字，这里默认为空字符串，不然null查询不到结果
     private String mLastQuery = "";
+
+
+    private String category = "";  // 分类名称
+    private AlertDialog dialog;  // 分类对话框
 
     /* 调试 */
     final String TAG = getClass().getSimpleName();
@@ -76,17 +87,16 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_home);
 
         /* 语音识别初始化工作 */
-        /*
-       /initPermission();  // 麦克风动态获取权限
+        initPermission();       // 麦克风动态获取权限
         asr = EventManagerFactory.create(this, "asr");  // 初始化EventManager对象
         asr.registerListener(this);  //注册自己的输出事件类
-       */
+
         /* 初始化控件 */
         nextPageBn = findViewById(R.id.next_page_button);
         previousPageBn = findViewById(R.id.previous_page_button);
         mSearchView = findViewById(R.id.floating_search_view);
         uploadPageBn = findViewById(R.id.upload_float_button);
-       // voiceBn = findViewById(R.id.action_voice_rec);  // 语音识别按钮
+
         /* 绑定点击事件 */
         nextPageBn.setOnClickListener(this);
         previousPageBn.setOnClickListener(this);
@@ -106,6 +116,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        // 将搜索框与关键字绑定
         mSearchView.setOnSearchListener(new FloatingSearchView.OnSearchListener() {
             @Override
             public void onSuggestionClicked(final SearchSuggestion searchSuggestion) {
@@ -120,10 +131,34 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 getBooks();
             }
         });
-        // 语音识别按钮的长按事件
-        /*
-        voiceBn.setOnTouchListener(new View.OnTouchListener() {
 
+        // 搜索框左侧按钮回调事件
+        mSearchView.setOnLeftMenuClickListener(new FloatingSearchView.OnLeftMenuClickListener() {
+            @Override
+            // 打开分类对话框
+            public void onMenuOpened() {
+                if (dialog == null)
+                {
+                    showDialog();
+                }
+                dialog.show();
+            }
+
+            @Override
+            // 关闭分类对话框
+            public void onMenuClosed() {
+                if (dialog == null)
+                {
+                    showDialog();
+                }
+                dialog.show();
+            }
+        });
+
+
+
+        // 语音识别按钮的长按事件
+        /*voiceBn.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View arg0, MotionEvent event) {
                 // TODO Auto-generated method stub
@@ -131,17 +166,15 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 // 按下
                 if (action == MotionEvent.ACTION_DOWN) {
                     asr.send(SpeechConstant.ASR_START, null, null, 0, 0);
-
                 }
                 // 松开
                 else if (action == MotionEvent.ACTION_UP) {
                     asr.send(SpeechConstant.ASR_STOP, null, null, 0, 0);
                 }
                 return false;
-
             }
-        });
-        */
+        });*/
+
         // 方便其它类显示Toast
         homeActivity = this;
 
@@ -161,25 +194,58 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    // 初始化并弹出对话框方法
+    private void showDialog(){
+        View view = LayoutInflater.from(this).inflate(R.layout.category_list,null,false);
+        dialog = new AlertDialog.Builder(this).setView(view).create();
+
+        // 分类单选按钮点击事件
+        RadioGroup radioGroup = view.findViewById(R.id.categoryGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton rb = view.findViewById(checkedId);
+                category = rb.getText().toString();
+                getBooks();
+            }
+        });
+
+        dialog.show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_search_view, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_voice_rec:
+                Toast.makeText(homeActivity, "voice", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void initBooks() {
         curPage = 1;
         getBooks();
     }
 
-    private void readInfo()
-    {
+    private void readInfo() {
         String username = mSpf.getString("username", "");
         String password = mSpf.getString("password", "");
-        //Toast.makeText(this, username + " " + password, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId())
-        {
+        switch (v.getId()) {
             case R.id.next_page_button:
-                if (curPage >= pageNum)
-                {
+                if (curPage >= pageNum) {
                     Toast.makeText(HomeActivity.this, "没有下一页了", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -187,8 +253,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 getBooks();
                 break;
             case R.id.previous_page_button:
-                if (curPage <= 1)
-                {
+                if (curPage <= 1) {
                     Toast.makeText(HomeActivity.this, "前面没有了", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -199,13 +264,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
-    private void getBooks()
-    {
+    private void getBooks() {
         String url = getString(R.string.baseUrl) + "/query";
         Map<String, String> params = new HashMap<>();
         params.put("page", String.valueOf(curPage));
         params.put("info", mLastQuery);
-        OkhttpUtil.okHttpGet(url, params,new CallBackUtil.CallBackString() {
+        params.put("category", category);
+        OkhttpUtil.okHttpGet(url, params, new CallBackUtil.CallBackString() {
             @Override
             public void onFailure(Call call, Exception e) {
                 swipeRefreshLayout.setRefreshing(false);
@@ -234,6 +299,8 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                         break;
                     // 出现错误
                     default:
+                        books.clear();
+                        bookAdapter.notifyDataSetChanged();
                         Toast.makeText(HomeActivity.this, "未查询到书籍", Toast.LENGTH_SHORT).show();
                         break;
 

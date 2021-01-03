@@ -22,6 +22,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +51,7 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
     private TextView btn_choosebook;
     private TextView btn_choosecover;
     private Button btn_upload;
-
+    private String category;//类别
     private String bookpath;
     public static final int CHOOSE_PHOTO = 2;
     private Uri reg_imageUri;
@@ -71,7 +73,14 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
         btn_choosecover.setOnClickListener(this);
         btn_upload = findViewById(R.id.btn_upload);
         btn_upload.setOnClickListener(this);
-
+        RadioGroup radioGroup=findViewById(R.id.upload_categoryGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton rb =findViewById(checkedId);
+                category=rb.getText().toString();
+            }
+        });
     }
 
     @Override
@@ -131,7 +140,7 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
         params.put("publication", publication);
         params.put("description", description);
         params.put("publish_date", pubdate);
-
+        params.put("category",category);
         if (bookpath == null) {
             Toast.makeText(this, "文件不能为空", Toast.LENGTH_SHORT).show();
             return;
