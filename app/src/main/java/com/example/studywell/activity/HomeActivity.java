@@ -120,25 +120,25 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
         // 语音识别按钮的长按事件
-        voiceBn.setOnTouchListener(new View.OnTouchListener() {
-
-            @Override
-            public boolean onTouch(View arg0, MotionEvent event) {
-                // TODO Auto-generated method stub
-                int action = event.getAction();
-                // 按下
-                if (action == MotionEvent.ACTION_DOWN) {
-                    asr.send(SpeechConstant.ASR_START, null, null, 0, 0);
-
-                }
-                // 松开
-                else if (action == MotionEvent.ACTION_UP) {
-                    asr.send(SpeechConstant.ASR_STOP, null, null, 0, 0);
-                }
-                return false;
-
-            }
-        });
+//        voiceBn.setOnTouchListener(new View.OnTouchListener() {
+//
+//            @Override
+//            public boolean onTouch(View arg0, MotionEvent event) {
+//                // TODO Auto-generated method stub
+//                int action = event.getAction();
+//                // 按下
+//                if (action == MotionEvent.ACTION_DOWN) {
+//                    asr.send(SpeechConstant.ASR_START, null, null, 0, 0);
+//
+//                }
+//                // 松开
+//                else if (action == MotionEvent.ACTION_UP) {
+//                    asr.send(SpeechConstant.ASR_STOP, null, null, 0, 0);
+//                }
+//                return false;
+//
+//            }
+//        });
 
         // 方便其它类显示Toast
         homeActivity = this;

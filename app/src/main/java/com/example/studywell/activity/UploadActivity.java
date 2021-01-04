@@ -30,6 +30,7 @@ import com.example.studywell.pojo.Res;
 import com.example.studywell.utils.CallBackUtil;
 import com.example.studywell.utils.OkhttpUtil;
 import com.example.studywell.utils.RealFilePathUtil;
+import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -150,6 +151,12 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
         filemap.put("book_file",bookfile);
         filemap.put("book_cover",imagefile);
 
+        LoadingDialog ld = new LoadingDialog(this);
+        ld.setLoadingText("上传中")
+                .setSuccessText("上传成功")//显示加载成功时的文字
+                .setFailedText("上传失败")
+                .show();
+
         OkhttpUtil.okHttpUploadMapFile(url, filemap, OkhttpUtil.FILE_TYPE_FILE, params, new CallBackUtil.CallBackString() {
             @Override
             public void onFailure(Call call, Exception e) {
@@ -165,11 +172,13 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
                     case 1:
                     {
                         Toast.makeText(UploadActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+                        ld.loadSuccess();
                         break;
                     }
                     case 0:
                     {
                         Toast.makeText(UploadActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+                        ld.loadFailed();
                         break;
                     }
                     default:
