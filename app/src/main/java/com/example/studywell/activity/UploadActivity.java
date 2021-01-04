@@ -32,6 +32,7 @@ import com.example.studywell.pojo.Res;
 import com.example.studywell.utils.CallBackUtil;
 import com.example.studywell.utils.OkhttpUtil;
 import com.example.studywell.utils.RealFilePathUtil;
+import com.xiasuhuei321.loadingdialog.view.LoadingDialog;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -150,7 +151,7 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
         if (reg_imageUri == null) {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.default_book);
             reg_imageUri = Uri.parse(MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "", ""));
-            //Toast.makeText(this, "封面不能为空", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "封面不能为空", Toast.LENGTH_SHORT).show();
             //return;
         }
         File imagefile = new File(RealFilePathUtil.getPath(this, reg_imageUri));
@@ -158,6 +159,12 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
         HashMap<String, File> filemap = new HashMap<>();
         filemap.put("book_file",bookfile);
         filemap.put("book_cover",imagefile);
+
+        LoadingDialog ld = new LoadingDialog(this);
+        ld.setLoadingText("上传中")
+                .setSuccessText("上传成功")//显示加载成功时的文字
+                .setFailedText("上传失败")
+                .show();
 
         OkhttpUtil.okHttpUploadMapFile(url, filemap, OkhttpUtil.FILE_TYPE_FILE, params, new CallBackUtil.CallBackString() {
             @Override
@@ -174,11 +181,13 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
                     case 1:
                     {
                         Toast.makeText(UploadActivity.this, "上传成功", Toast.LENGTH_SHORT).show();
+                        ld.loadSuccess();
                         break;
                     }
                     case 0:
                     {
                         Toast.makeText(UploadActivity.this, "上传失败", Toast.LENGTH_SHORT).show();
+                        ld.loadFailed();
                         break;
                     }
                     default:
@@ -217,9 +226,14 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
             }
         }
         else if (requestCode == 2){
-            reg_imageUri = data.getData();
-            String imagePath = RealFilePathUtil.getPath(UploadActivity.this, reg_imageUri);
-            btn_choosecover.setText(imagePath);
+            if (resultCode == RESULT_OK) {
+                Uri uri = data.getData();
+                if (uri != null) {
+                    reg_imageUri = uri;
+                    String imagePath = RealFilePathUtil.getPath(UploadActivity.this, reg_imageUri);
+                    btn_choosecover.setText(imagePath);
+                }
+            }
         }
     }
 }
