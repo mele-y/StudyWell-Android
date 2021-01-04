@@ -1,0 +1,155 @@
+Index: app/src/main/java/com/example/studywell/activity/RegisterActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.studywell.activity;\r\n\r\nimport androidx.annotation.Nullable;\r\nimport androidx.appcompat.app.AppCompatActivity;\r\nimport androidx.core.app.ActivityCompat;\r\nimport androidx.core.content.ContextCompat;\r\nimport androidx.core.content.FileProvider;\r\n\r\nimport android.Manifest;\r\nimport android.annotation.TargetApi;\r\nimport android.content.ContentUris;\r\nimport android.content.Intent;\r\nimport android.content.pm.PackageManager;\r\nimport android.database.Cursor;\r\nimport android.graphics.Bitmap;\r\nimport android.graphics.BitmapFactory;\r\nimport android.graphics.drawable.BitmapDrawable;\r\nimport android.net.Uri;\r\nimport android.os.Build;\r\nimport android.os.Bundle;\r\nimport android.os.Environment;\r\nimport android.provider.DocumentsContract;\r\nimport android.provider.MediaStore;\r\nimport android.util.Log;\r\nimport android.view.LayoutInflater;\r\nimport android.view.View;\r\nimport android.widget.Button;\r\nimport android.widget.EditText;\r\nimport android.widget.ImageView;\r\nimport android.widget.Toast;\r\n\r\nimport com.alibaba.fastjson.JSON;\r\nimport com.example.studywell.pojo.Res;\r\nimport com.example.studywell.utils.CallBackUtil;\r\nimport com.example.studywell.utils.OkhttpUtil;\r\nimport com.example.studywell.utils.RealFilePathUtil;\r\nimport com.qmuiteam.qmui.util.QMUIStatusBarHelper;\r\nimport com.qmuiteam.qmui.widget.QMUITopBar;\r\n\r\nimport java.io.BufferedOutputStream;\r\nimport java.io.File;\r\nimport java.io.FileNotFoundException;\r\nimport java.io.FileOutputStream;\r\nimport java.io.IOException;\r\nimport java.util.HashMap;\r\n\r\nimport butterknife.BindView;\r\nimport butterknife.ButterKnife;\r\nimport okhttp3.Call;\r\nimport okhttp3.MediaType;\r\nimport okhttp3.MultipartBody;\r\nimport okhttp3.OkHttpClient;\r\nimport okhttp3.Request;\r\nimport okhttp3.RequestBody;\r\nimport okhttp3.Response;\r\n\r\npublic class RegisterActivity extends AppCompatActivity implements View.OnClickListener {\r\n\r\n    private Button btn_takephoto;\r\n    private Button btn_choosephoto;\r\n    private Button btn_reg;\r\n    private EditText et_username;\r\n    private EditText et_password;\r\n\r\n    public static final int REG_TAKE_PHOTO = 1;\r\n    public static final int CHOOSE_PHOTO = 2;\r\n\r\n    private ImageView iv_picture;\r\n    private Uri reg_imageUri;\r\n    @BindView(R.id.topbar)\r\n    QMUITopBar mTopBar;\r\n    final String TAG = getClass().getSimpleName();\r\n\r\n    private File outputImage;\r\n    //private Uri imageUri;\r\n\r\n    @Override\r\n    protected void onCreate(Bundle savedInstanceState) {\r\n        super.onCreate(savedInstanceState);\r\n\r\n        // 沉浸式状态栏\r\n        QMUIStatusBarHelper.translucent(this);\r\n\r\n        View root = LayoutInflater.from(this).inflate(R.layout.activity_register, null);\r\n        ButterKnife.bind(this, root);\r\n        //初始化状态栏\r\n        initTopBar();\r\n        setContentView(root);\r\n\r\n        iv_picture = findViewById(R.id.iv_picture);\r\n        et_username = findViewById(R.id.et_username);\r\n        et_password = findViewById(R.id.et_password);\r\n\r\n        btn_takephoto = findViewById(R.id.btn_takephoto);\r\n        btn_takephoto.setOnClickListener(this);\r\n        btn_choosephoto = findViewById(R.id.btn_choosephoto);\r\n        btn_choosephoto.setOnClickListener(this);\r\n        btn_reg = findViewById(R.id.btn_reg);\r\n        btn_reg.setOnClickListener(this);\r\n    }\r\n\r\n    @Override\r\n    public void onClick(View v) {\r\n        switch(v.getId())\r\n        {\r\n            // 注册按钮点击事件\r\n            case R.id.btn_reg:\r\n                register();\r\n                break;\r\n            case R.id.btn_takephoto:\r\n                takephoto();\r\n                break;\r\n            case R.id.btn_choosephoto:\r\n                chosephoto();\r\n                break;\r\n        }\r\n    }\r\n\r\n    private void initTopBar() {\r\n        mTopBar.addLeftBackImageButton().setOnClickListener(new View.OnClickListener() {\r\n            @Override\r\n            public void onClick(View v) {\r\n                finish();\r\n            }\r\n        });\r\n        mTopBar.setTitle(\"注册账号\");\r\n    }\r\n\r\n    /* 注册 */\r\n    private void register()\r\n    {\r\n        String name = String.valueOf(et_username.getText());\r\n        String pass = String.valueOf(et_password.getText());\r\n\r\n        if (reg_imageUri == null)\r\n        {\r\n            Toast.makeText(this, \"照片不能为空\", Toast.LENGTH_SHORT).show();\r\n            return;\r\n        }\r\n        //String url = \"http://121.196.150.190/register\";//替换成自己的服务器地址\r\n        File user_image;\r\n        // 照片放在缓存里\r\n        if (outputImage != null)\r\n        {\r\n            user_image = outputImage;\r\n        }\r\n        else\r\n        {\r\n            user_image = new File(RealFilePathUtil.getPath(this, reg_imageUri));\r\n        }\r\n\r\n        String url = \"http://121.196.150.190/register\";//替换成自己的服务器地址\r\n        HashMap<String, String> paramsMap = new HashMap<>();\r\n        paramsMap.put(\"username\", name);\r\n        paramsMap.put(\"password\", pass);\r\n\r\n        OkhttpUtil.okHttpUploadFile(url, user_image, \"user_photo\", OkhttpUtil.FILE_TYPE_IMAGE, paramsMap, new CallBackUtil.CallBackString() {\r\n            @Override\r\n            public void onFailure(Call call, Exception e) {\r\n                Toast.makeText(RegisterActivity.this, \"不能正常连接到服务器\", Toast.LENGTH_SHORT).show();\r\n            }\r\n\r\n            @Override\r\n            public void onProgress(float progress, long total) {\r\n\r\n            }\r\n\r\n            @Override\r\n            public void onResponse(String response) {\r\n                Log.i(\"==================================\",response);\r\n                Res res = JSON.parseObject(response, Res.class);\r\n                switch (res.getCode()) {\r\n                    case 0:\r\n                        Toast.makeText(RegisterActivity.this, \"用户已存在\", Toast.LENGTH_SHORT).show();\r\n                        break;\r\n                    case 1:\r\n                        Toast.makeText(RegisterActivity.this, \"注册成功\", Toast.LENGTH_SHORT).show();\r\n                        Intent intent = new Intent();\r\n                        intent.setClass(RegisterActivity.this, LoginActivity.class);\r\n                        startActivity(intent);\r\n                        break;\r\n                    case 2:\r\n                        Toast.makeText(RegisterActivity.this, \"注册失败\", Toast.LENGTH_SHORT).show();\r\n                        break;\r\n                }\r\n            }\r\n        });\r\n\r\n    }\r\n\r\n    private void takephoto(){\r\n        Toast.makeText(RegisterActivity.this, \"拍照\", Toast.LENGTH_SHORT).show();\r\n        outputImage = new File(getExternalCacheDir(), \"output_image.jpg\");\r\n        try//判断图片是否存在，存在则删除在创建，不存在则直接创建\r\n        {\r\n            if (outputImage.exists()) {\r\n                outputImage.delete();\r\n            }\r\n            outputImage.createNewFile();\r\n        } catch (IOException e) {\r\n            e.printStackTrace();\r\n        }\r\n        //判断运行设备的系统版本是否低于Android7.0\r\n        if (Build.VERSION.SDK_INT >= 24)\r\n        {\r\n            reg_imageUri = FileProvider.getUriForFile(RegisterActivity.this,\r\n                    \"com.example.cameraalbumtest.fileprovider\", outputImage);\r\n\r\n        } else {\r\n            reg_imageUri = Uri.fromFile(outputImage);\r\n        }\r\n        //使用隐示的Intent，调用摄像头，并把它存储\r\n        //ActivityCompat.requestPermissions(RegisterActivity.this, new String[]{Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE},1);\r\n        Intent intent = new Intent(\"android.media.action.IMAGE_CAPTURE\");\r\n        intent.putExtra(MediaStore.EXTRA_OUTPUT, reg_imageUri);\r\n        startActivityForResult(intent, REG_TAKE_PHOTO);\r\n        //调用会返回结果的开启方式，返回成功的话，则把它显示出来\r\n    }\r\n\r\n    private void chosephoto(){\r\n        outputImage = null;\r\n        Toast.makeText(RegisterActivity.this, \"选择照片\", Toast.LENGTH_SHORT).show();\r\n        if (ContextCompat.checkSelfPermission(RegisterActivity.this,\r\n                Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.\r\n                PERMISSION_GRANTED) {\r\n            Log.d(\"permission\", \"permission\");\r\n            ActivityCompat.requestPermissions(RegisterActivity.this, new\r\n                    String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);\r\n        } else {\r\n            Log.d(\"album\", \"openAlbum\");\r\n            openAlbum();\r\n        }\r\n    }\r\n\r\n    private void openAlbum() {\r\n        Intent intent = new Intent(\"android.intent.action.GET_CONTENT\");\r\n        intent.setType(\"image/*\");\r\n        startActivityForResult(intent, CHOOSE_PHOTO); // 打开相册\r\n    }\r\n\r\n    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {\r\n        switch (requestCode) {\r\n            case REG_TAKE_PHOTO:\r\n                if (resultCode == RESULT_OK) {\r\n                    try {\r\n                        Bitmap bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(reg_imageUri));\r\n                        iv_picture.setImageBitmap(bitmap);\r\n                        //将图片解析成Bitmap对象，并把它显现出来\r\n                    } catch (FileNotFoundException e) {\r\n                        e.printStackTrace();\r\n                    }\r\n                }\r\n                break;\r\n\r\n            case CHOOSE_PHOTO: {\r\n                if (resultCode == RESULT_OK) {\r\n                    reg_imageUri = data.getData();\r\n                    // 判断手机系统版本号\r\n                    if (Build.VERSION.SDK_INT >= 19) {\r\n                        // 4.4及以上系统使用这个方法处理图片\r\n                        handleImageOnKitKat(data);\r\n                    } else {\r\n                        // 4.4以下系统使用这个方法处理图片\r\n                        handleImageBeforeKitKat(data);\r\n                    }\r\n                }\r\n                break;\r\n            }\r\n            default:\r\n                break;\r\n        }\r\n    }\r\n\r\n    @TargetApi(19)\r\n    private void handleImageOnKitKat(Intent data) {\r\n        String imagePath = null;\r\n        Uri uri = data.getData();\r\n        if (DocumentsContract.isDocumentUri(this, uri)) {\r\n            // 如果是document类型的Uri，则通过document id处理\r\n            String docId = DocumentsContract.getDocumentId(uri);\r\n            if (\"com.android.providers.media.documents\".equals(uri.getAuthority())) {\r\n                String id = docId.split(\":\")[1]; // 解析出数字格式的id\r\n                String selection = MediaStore.Images.Media._ID + \"=\" + id;\r\n                imagePath = getImagePath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, selection);\r\n            } else if (\"com.android.providers.downloads.documents\".equals(uri.\r\n                    getAuthority())) {\r\n                Uri contentUri = ContentUris.withAppendedId(Uri.parse(\"content://downloads/public_downloads\"), Long.valueOf(docId));\r\n                imagePath = getImagePath(contentUri, null);\r\n            }\r\n        } else if (\"content\".equalsIgnoreCase(uri.getScheme())) {\r\n            // 如果是content类型的Uri，则使用普通方式处理\r\n            imagePath = getImagePath(uri, null);\r\n        } else if (\"file\".equalsIgnoreCase(uri.getScheme())) {\r\n            // 如果是file类型的Uri，直接获取图片路径即可\r\n            imagePath = uri.getPath();\r\n        }\r\n        displayImage(imagePath); // 根据图片路径显示图片\r\n    }\r\n\r\n    private void handleImageBeforeKitKat(Intent data) {\r\n        Uri uri = data.getData();\r\n\r\n        String imagePath = getImagePath(uri, null);\r\n        displayImage(imagePath);\r\n    }\r\n\r\n    private String getImagePath(Uri uri, String selection) {\r\n        String path = null;\r\n        // 通过Uri和selection来获取真实的图片路径\r\n        Cursor cursor = getContentResolver().query(uri, null, selection, null, null);\r\n        if (cursor != null) {\r\n            if (cursor.moveToFirst()) {\r\n                path = cursor.getString(cursor.getColumnIndex(MediaStore.\r\n                        Images.Media.DATA));\r\n            }\r\n            cursor.close();\r\n        }\r\n        return path;\r\n    }\r\n\r\n    private void displayImage(String imagePath) {\r\n        if (imagePath != null) {\r\n            Bitmap bitmap = BitmapFactory.decodeFile(imagePath);\r\n            iv_picture.setImageBitmap(bitmap);\r\n        } else {\r\n            Toast.makeText(this, \"failed to get image\", Toast.LENGTH_SHORT).show();\r\n        }\r\n    }\r\n\r\n    @Override\r\n    public void onRequestPermissionsResult(int requestCode, String[] permissions,\r\n                                           int[] grantResults) {\r\n        switch (requestCode) {\r\n            case 1:\r\n\r\n                if (grantResults.length > 0 && grantResults[0] == PackageManager.\r\n                        PERMISSION_GRANTED) {\r\n                    openAlbum();\r\n                } else {\r\n                    Toast.makeText(this, \"You denied the permission\",\r\n                            Toast.LENGTH_SHORT).show();\r\n                }\r\n                break;\r\n            default:\r\n        }\r\n    }\r\n\r\n/*\r\n    public File saveBitmapFile(Bitmap bitmap) {\r\n        File file = new File(Environment.getExternalStorageDirectory() + \"/temp.jpg\");//将要保存图片的路径\r\n        try {\r\n            BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file));\r\n            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);\r\n            bos.flush();\r\n            bos.close();\r\n        } catch (IOException e) {\r\n            e.printStackTrace();\r\n        }\r\n        return file;\r\n    }\r\n*/\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/example/studywell/activity/RegisterActivity.java	(revision 1e2438f170a1357625f696bd6dd99021af2541ae)
++++ app/src/main/java/com/example/studywell/activity/RegisterActivity.java	(date 1607159460207)
+@@ -7,6 +7,7 @@
+ import androidx.core.content.FileProvider;
+ 
+ import android.Manifest;
++import android.annotation.SuppressLint;
+ import android.annotation.TargetApi;
+ import android.content.ContentUris;
+ import android.content.Intent;
+@@ -165,6 +166,7 @@
+ 
+             }
+ 
++            @SuppressLint("LongLogTag")
+             @Override
+             public void onResponse(String response) {
+                 Log.i("==================================",response);
+@@ -238,7 +240,9 @@
+         startActivityForResult(intent, CHOOSE_PHOTO); // 打开相册
+     }
+ 
++
+     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
++        super.onActivityResult(requestCode, resultCode, data);
+         switch (requestCode) {
+             case REG_TAKE_PHOTO:
+                 if (resultCode == RESULT_OK) {
+Index: .idea/jarRepositories.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/jarRepositories.xml	(date 1607158755327)
++++ .idea/jarRepositories.xml	(date 1607158755327)
+@@ -0,0 +1,45 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="RemoteRepositoriesConfiguration">
++    <remote-repository>
++      <option name="id" value="central" />
++      <option name="name" value="Maven Central repository" />
++      <option name="url" value="https://repo1.maven.org/maven2" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="jboss.community" />
++      <option name="name" value="JBoss Community repository" />
++      <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="maven4" />
++      <option name="name" value="maven4" />
++      <option name="url" value="http://maven.aliyun.com/nexus/content/repositories/gradle-plugin" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="maven3" />
++      <option name="name" value="maven3" />
++      <option name="url" value="http://maven.aliyun.com/nexus/content/repositories/google" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="BintrayJCenter" />
++      <option name="name" value="BintrayJCenter" />
++      <option name="url" value="https://jcenter.bintray.com/" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="maven" />
++      <option name="name" value="maven" />
++      <option name="url" value="http://maven.aliyun.com/nexus/content/groups/public/" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="maven2" />
++      <option name="name" value="maven2" />
++      <option name="url" value="http://maven.aliyun.com/nexus/content/repositories/jcenter" />
++    </remote-repository>
++    <remote-repository>
++      <option name="id" value="Google" />
++      <option name="name" value="Google" />
++      <option name="url" value="https://dl.google.com/dl/android/maven2/" />
++    </remote-repository>
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/compiler.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/compiler.xml	(date 1607158668135)
++++ .idea/compiler.xml	(date 1607158668135)
+@@ -0,0 +1,6 @@
++<?xml version="1.0" encoding="UTF-8"?>
++<project version="4">
++  <component name="CompilerConfiguration">
++    <bytecodeTargetLevel target="1.8" />
++  </component>
++</project>
+\ No newline at end of file
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"GradleSettings\">\r\n    <option name=\"linkedExternalProjectsSettings\">\r\n      <GradleProjectSettings>\r\n        <compositeConfiguration>\r\n          <compositeBuild compositeDefinitionSource=\"SCRIPT\" />\r\n        </compositeConfiguration>\r\n        <option name=\"distributionType\" value=\"DEFAULT_WRAPPED\" />\r\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\r\n        <option name=\"resolveModulePerSourceSet\" value=\"false\" />\r\n        <option name=\"testRunner\" value=\"PLATFORM\" />\r\n      </GradleProjectSettings>\r\n    </option>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/gradle.xml	(revision 1e2438f170a1357625f696bd6dd99021af2541ae)
++++ .idea/gradle.xml	(date 1607158668150)
+@@ -1,15 +1,20 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
++  <component name="GradleMigrationSettings" migrationVersion="1" />
+   <component name="GradleSettings">
+     <option name="linkedExternalProjectsSettings">
+       <GradleProjectSettings>
+-        <compositeConfiguration>
+-          <compositeBuild compositeDefinitionSource="SCRIPT" />
+-        </compositeConfiguration>
++        <option name="testRunner" value="PLATFORM" />
+         <option name="distributionType" value="DEFAULT_WRAPPED" />
+         <option name="externalProjectPath" value="$PROJECT_DIR$" />
++        <option name="modules">
++          <set>
++            <option value="$PROJECT_DIR$" />
++            <option value="$PROJECT_DIR$/app" />
++          </set>
++        </option>
+         <option name="resolveModulePerSourceSet" value="false" />
+-        <option name="testRunner" value="PLATFORM" />
++        <option name="useQualifiedModuleNames" value="true" />
+       </GradleProjectSettings>
+     </option>
+   </component>
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_1_8\" project-jdk-name=\"1.8\" project-jdk-type=\"JavaSDK\">\r\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\r\n  </component>\r\n  <component name=\"ProjectType\">\r\n    <option name=\"id\" value=\"Android\" />\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/misc.xml	(revision 1e2438f170a1357625f696bd6dd99021af2541ae)
++++ .idea/misc.xml	(date 1607158668126)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" project-jdk-name="1.8" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_8" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/build/classes" />
+   </component>
+   <component name="ProjectType">
