@@ -147,6 +147,13 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             // 关闭分类对话框
             public void onMenuClosed() {
+
+            }
+        });
+        /*
+        mSearchView.setOnHomeActionClickListener(new FloatingSearchView.OnHomeActionClickListener() {
+            @Override
+            public void onHomeClicked() {
                 if (dialog == null)
                 {
                     showDialog();
@@ -154,7 +161,7 @@ public class HomeActivity extends AppCompatActivity implements View.OnClickListe
                 dialog.show();
             }
         });
-
+*/
 
 
         // 语音识别按钮的长按事件

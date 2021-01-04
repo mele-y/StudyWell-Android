@@ -222,6 +222,4 @@ public class UploadActivity extends AppCompatActivity implements View.OnClickLis
             btn_choosecover.setText(imagePath);
         }
     }
-
-
 }
